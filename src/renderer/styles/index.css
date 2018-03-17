@@ -112,6 +112,9 @@
 
 #app .sidebar-container .svg-icon {
   margin-right: 16px;
+  width: 1em;
+  height: 1em;
+  vertical-align: -.15em;
 }
 
 #app .sidebar-container .el-menu {
@@ -524,10 +527,9 @@ code a:hover {
 .multiselect--active {
   z-index: 1000 !important;
 }
-.svg-icon {
-  width: 15px;
-  height: 15px;
-  vertical-align: -0.15em;
-  fill: currentColor;
-  overflow: hidden;
+
+.shop-container {
+  width: 80%;
+  min-width: 700px;
+  margin: 40px auto;
 }

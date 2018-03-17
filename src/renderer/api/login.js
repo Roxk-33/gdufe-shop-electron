@@ -26,4 +26,11 @@ export function getUserInfo(token) {
     params: { token }
   })
 }
+export function changePass(token) {
+  return request({
+    url: '/user/change',
+    method: 'get',
+    params: { token }
+  })
+}
 

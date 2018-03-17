@@ -87,6 +87,38 @@ export const asyncRouterMap = [
     ],
   },
   {
+    path: '/sale',
+    component: Layout,
+    redirect: '/sale/index',
+    meta: { roles: ['admin'] }, // you can set roles in root nav    
+    children: [{
+      path: 'index',
+      component: _import('sale/index'),
+      name: 'sale',
+      meta: {
+        title: 'sale',
+        icon: 'sale',
+        roles: ['admin'] // or you can only set roles in sub nav
+      }
+    }],
+  },
+  {
+    path: '/addVip',
+    component: Layout,
+    redirect: '/addVip/index',
+    meta: { roles: ['admin'] }, // you can set roles in root nav    
+    children: [{
+      path: 'index',
+      component: _import('addVip/index'),
+      name: 'vipAdd',
+      meta: {
+        title: 'vipAdd',
+        icon: 'addVip',
+        roles: ['admin'] // or you can only set roles in sub nav
+      }
+    }],
+  },
+  {
     path: '/charts',
     component: Layout,
     redirect: 'noredirect',

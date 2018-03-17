@@ -1,4 +1,4 @@
-# my-project
+# gdufe-shop
 
 > An electron-vue project
 

@@ -3,6 +3,7 @@ import loginAPI from './login'
 import articleAPI from './article'
 import remoteSearchAPI from './remoteSearch'
 import transactionAPI from './transaction'
+import saleAPI from './sale'
 
 // Mock.setup({
 //   timeout: '350-600'
@@ -25,5 +26,10 @@ Mock.mock(/\/search\/user/, 'get', remoteSearchAPI.searchUser)
 
 // 账单相关
 Mock.mock(/\/transaction\/list/, 'get', transactionAPI.getList)
+
+
+// 销售相关
+Mock.mock(/\/cart\/in/, 'get', saleAPI.cartIn)
+Mock.mock(/\/cart\/clean/, 'post', transactionAPI.cartDeal)
 
 export default Mock
