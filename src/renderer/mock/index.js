@@ -30,6 +30,8 @@ Mock.mock(/\/transaction\/list/, 'get', transactionAPI.getList)
 
 // 销售相关
 Mock.mock(/\/cart\/in/, 'get', saleAPI.cartIn)
-Mock.mock(/\/cart\/clean/, 'post', transactionAPI.cartDeal)
+Mock.mock(/\/cart\/clean/, 'post', saleAPI.cartDeal)
+Mock.mock(/\/vip\/add/, 'post', saleAPI.addVip)
+Mock.mock(/\/vip\/check/, 'get', saleAPI.checkVip)
 
 export default Mock
