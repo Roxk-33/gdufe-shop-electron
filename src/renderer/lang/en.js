@@ -15,7 +15,6 @@ export default {
     avatarUpload: 'Avatar Upload',
     dropzone: 'Dropzone',
     sticky: 'Sticky',
-    countTo: 'CountTo',
     componentMixin: 'Mixin',
     backToTop: 'BackToTop',
     charts: 'Charts',

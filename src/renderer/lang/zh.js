@@ -15,7 +15,6 @@ export default {
     dndList: '列表拖拽',
     splitPane: 'Splitpane',
     avatarUpload: '头像上传',
-    countTo: 'CountTo',
     componentMixin: '小组件',
     backToTop: '返回顶部',
     charts: '图表',

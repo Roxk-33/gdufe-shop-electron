@@ -6,26 +6,10 @@
 
     <div class="right-menu">
 
-      <!-- <error-log v-if="log.length>0" class="errLog-container right-menu-item" :logsList="log"></error-log> -->
 
       <el-tooltip effect="dark" content="全屏" placement="bottom">
         <screenfull class="screenfull right-menu-item"></screenfull>
       </el-tooltip>
-
-      <el-dropdown trigger="click" class='international' @command="handleSetLanguage">
-        <div>
-          <svg-icon class-name='right-menu-item international-icon' icon-class="language"  name="language"/>
-        </div>
-        <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item command="zh" :disabled="language==='zh'">中文</el-dropdown-item>
-          <el-dropdown-item command="en" :disabled="language==='en'">English</el-dropdown-item>
-        </el-dropdown-menu>
-      </el-dropdown>
-
-      <el-tooltip effect="dark" content="换肤" placement="bottom">
-        <theme-picker class="theme-switch right-menu-item"></theme-picker>
-      </el-tooltip>
-
       <el-dropdown class="avatar-container right-menu-item" trigger="click">
         <div class="avatar-wrapper">
           <img class="user-avatar" :src="avatar+'?imageView2/1/w/80/h/80'">
@@ -37,11 +21,6 @@
               首页
             </el-dropdown-item>
           </router-link>
-          <a target='_blank' href="https://github.com/PanJiaChen/vue-element-admin/">
-            <el-dropdown-item>
-              项目地址
-            </el-dropdown-item>
-          </a>
           <el-dropdown-item divided>
             <span @click="logout" style="display:block;">退出登录</span>
           </el-dropdown-item>
@@ -55,22 +34,17 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
-import ThemePicker from '@/components/ThemePicker'
 import Screenfull from '@/components/Screenfull'
-import ErrorLog from '@/components/ErrorLog'
 // import errLogStore from 'store/errLog'
 
 export default {
   components: {
     Breadcrumb,
     Hamburger,
-    ThemePicker,
-    ErrorLog,
     Screenfull
   },
   data() {
     return {
-      // log: errLogStore.state.errLog
     }
   },
   computed: {

@@ -2,7 +2,6 @@
 <div class="shop-container">
     <div>
         <p class='shop-title'>会员</p>
-      
         <transition name="el-fade-in-linear">
             <el-input  v-show="showVip" placeholder="请输入内容" v-model="vipNo" class="input-with-select">
             <el-select v-model="searchType" slot="prepend" placeholder="请选择">
@@ -13,19 +12,14 @@
             </el-input>
         </transition>
         <transition name="el-fade-in-linear">
-          
             <el-card class="vip-card" v-show='!showVip'>
               <el-button  class='vip-card_closeBtn' type="primary" round icon="el-icon-close" @click="showVip = !showVip; vipInfo = {}"></el-button>
-              
               <p>会员编号：{{vipInfo.no}}</p>
               <p>会员姓名：{{vipInfo.name}}</p>
               <p>会员电话：{{vipInfo.tel}}</p>
               <p>会员性别：{{vipInfo.sex == 1 ? '男' : '女'}}</p>
-              
             </el-card>
-            
         </transition>
-
     </div>
     <div>
         <p class='shop-title'>添加商品</p>
@@ -43,7 +37,7 @@
     </div>
     <div>
         <p class='shop-title'>商品列表</p>
-        <el-table border :data="cartList" v-loading="listLoading" highlight-current-row class='goodsList'>
+        <el-table border :data="cartList" v-loading="listLoading"  class='goodsList'>
             <el-table-column align='center' type="index" label="序号" width="70">
             </el-table-column>
             <el-table-column align='center' prop="good_no" label="商品编号" width="200" filter-placement="bottom-end" >
@@ -54,20 +48,44 @@
             </el-table-column>
             <el-table-column align='center' prop="good_price" label="单价" width="200">
             </el-table-column>
+            <el-table-column align='center' prop="good_total" label="合计" width="200">
+            </el-table-column>
             <el-table-column align='center' label="操作">
-                  <el-button type="success" @click="delGood()" style="float:right;" >删除</el-button>
-                
+              <template slot-scope="scope">
+                 <el-button type="danger" @click="delGood(scope.$index)" icon='el-icon-delete'></el-button>
+              </template>
             </el-table-column>
         </el-table>
-        <el-button type="success" @click="Clearing" style="float:right;" >结算</el-button>
-        <el-button type="danger" @click="Empty" style="float:right;margin-right:10px;" :disabled="cartList.length > 0">清空</el-button>
+        <el-button type="success" @click="dialogVisible = true" style="float:right;" >结算</el-button>
+        <el-button type="danger" @click="Empty" style="float:right;margin-right:10px;" :disabled="isEmpty">清空</el-button>
     </div>
-        
+    <el-dialog title="结算" :visible.sync="dialogVisible" width="30%">
+      <div class='pay-box'>
+          <div class='pay-box-item'>
+            <span>应收款：</span>
+            <el-input v-model="TotalPrice" readonly></el-input>
+          </div>
+          <div class='pay-box-item'>
+            <span>实收款：</span>
+            <el-input v-model.number="pay" style="position:relative" :class="{'error_input' : !isEnough || !isNumber}"></el-input>
+            <div class="error_input_tip" v-show="!isEnough && isNumber">实收款小于应收款</div>
+            <div class="error_input_tip" v-show="!isNumber">只能输入数字</div>
+          </div>
+          <div  class='pay-box-item' v-if="isEnough && pay !== 0"><span>找余：</span>
+            <el-input v-model="ChangeMoney" readonly ></el-input>
+          
+          </div>
+      </div>  
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="Clearing" :disabled="!isEnough || pay === 0">确 定</el-button>
+      </span>
+    </el-dialog>
 </div>
 </template>
 
 <script>
-import { cleanCart, addGood, checkVip  } from "@/api/sale";
+import { cleanCart, addGood, checkVip} from "@/api/sale";
 import { validateTel } from '@/utils/validate.js'
 
 const defaultForm = {
@@ -97,6 +115,8 @@ export default {
       vipInfo:{},
       loading: false,
       listLoading: false,
+      dialogVisible: false,
+      pay : 0,
       vipNo:'',
       searchType : '1',
       rules: {
@@ -120,7 +140,6 @@ export default {
     };
   },
   methods: {
-    
     pushCart() {
       this.$refs["postForm"].validate(valid => {
         if (valid) {
@@ -130,10 +149,11 @@ export default {
               const {status,info} = response.data;
               if (status) {
                 this.$message({
-                  message: response.data,
+                  message: '添加成功',
                   type: "success"
                 });
                 this.loading = false;
+                info.good_total = info.good_num * info.good_price;
                 this.cartList.push(info);
               }
             })
@@ -146,24 +166,12 @@ export default {
       });
     },
     Clearing() {
-      this.$refs["postForm"].validate(valid => {
-        if (valid) {
-          this.loading = true;
-          cleanCart(this.postForm)
-            .then(response => {
-              this.$message({
-                message: "操作成功",
-                type: "success"
-              });
-              this.loading = false;
-              this.cartList = [];
-            })
-            .catch(err => {
-              this.loading = false;
-              this.$message({ message: err, type: "error" });
-            });
-        } 
-      });
+
+
+      this.dialogVisible = false;
+    },
+    delGood(index){
+      this.cartList.splice(index,1);
     },
     Empty() {
       this.cartList = [];
@@ -196,6 +204,29 @@ export default {
         }
       })
     }
+  },
+  computed:{
+    TotalPrice(){
+        let temp = 0;
+        this.cartList.forEach(element => {
+              temp += element.good_total;
+        });
+        console.log(temp);
+        return temp;
+    },
+    isEmpty(){
+      return this.cartList.length == 0;
+    },
+    ChangeMoney(){
+      return this.pay - this.TotalPrice 
+    },
+    isEnough(){
+      return this.pay >= this.TotalPrice || this.pay == 0
+    },
+    isNumber(){
+      return !(isNaN(this.pay))
+    }
+
   }
 };
 </script>
@@ -216,5 +247,30 @@ export default {
   }
   .vip-card_closeBtn{
     float: right;
+  }
+  .error_input .el-input__inner{
+   border: 1px  solid #f56c6c;
+  }
+  .error_input_tip{
+     color: #f56c6c;
+    font-size: 12px;
+    line-height: 1;
+    padding-top: 4px;
+    padding-left: 20px;
+  }
+  .pay-box{
+    text-align: center;
+  }
+  .pay-box-item{
+    margin: 10px auto;
+  }
+  .pay-box-item .el-input{
+    width:150px;
+    display: inline-block;
+  }
+  .pay-box-item span{
+    font-size: 15px;
+    width:60px;
+    display: inline-block;
   }
 </style>
