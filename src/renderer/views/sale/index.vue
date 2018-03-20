@@ -5,8 +5,8 @@
         <transition name="el-fade-in-linear">
             <el-input  v-show="showVip" placeholder="请输入内容" v-model="vipNo" class="input-with-select">
             <el-select v-model="searchType" slot="prepend" placeholder="请选择">
-                <el-option label="会员编号" value="1"></el-option>
-                <el-option label="会员电话" value="2"></el-option>
+                <el-option label="会员编号" value="0"></el-option>
+                <el-option label="会员电话" value="1"></el-option>
             </el-select>
             <el-button slot="append" icon="el-icon-search" @click="getVipInfo"></el-button>
             </el-input>
@@ -153,8 +153,11 @@ export default {
                   type: "success"
                 });
                 this.loading = false;
-                info.good_total = info.good_num * info.good_price;
+                info.good_total = 0;
+                info.good_total = (parseInt(info.good_num) * parseFloat(info.good_price)).toFixed(1);
                 this.cartList.push(info);
+              }else{
+                  this.$message.error(rep.data.message);
               }
             })
             .catch(err => {
@@ -166,8 +169,6 @@ export default {
       });
     },
     Clearing() {
-
-
       this.dialogVisible = false;
     },
     delGood(index){
@@ -192,15 +193,11 @@ export default {
         return;
       }
       checkVip({no:this.vipNo}).then(rep => {
-        console.log(rep);
         if(rep.data.status){
             this.showVip = !this.showVip;
             this.vipInfo = rep.data.info
         }else{
-          this.$message({
-                message: resp.data.message,
-                type: "info"
-          });
+          this.$message.error(rep.data.message);
         }
       })
     }
@@ -209,9 +206,10 @@ export default {
     TotalPrice(){
         let temp = 0;
         this.cartList.forEach(element => {
+          console.log(1);
+          console.log(element.good_total);
               temp += element.good_total;
         });
-        console.log(temp);
         return temp;
     },
     isEmpty(){

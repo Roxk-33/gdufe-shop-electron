@@ -4,6 +4,7 @@ import articleAPI from './article'
 import remoteSearchAPI from './remoteSearch'
 import transactionAPI from './transaction'
 import saleAPI from './sale'
+import accountAPI from './account'
 
 // Mock.setup({
 //   timeout: '350-600'
@@ -29,9 +30,15 @@ Mock.mock(/\/transaction\/list/, 'get', transactionAPI.getList)
 
 
 // 销售相关
-Mock.mock(/\/cart\/in/, 'get', saleAPI.cartIn)
-Mock.mock(/\/cart\/clean/, 'post', saleAPI.cartDeal)
-Mock.mock(/\/vip\/add/, 'post', saleAPI.addVip)
-Mock.mock(/\/vip\/check/, 'get', saleAPI.checkVip)
+Mock.mock(/\/front\/good\/in/, 'get', saleAPI.cartIn)
+Mock.mock(/\/front\/good\/clean/, 'post', saleAPI.cartDeal)
+Mock.mock(/\/front\/vip\/add/, 'post', saleAPI.addVip)
+Mock.mock(/\/front\/vip\/check/, 'get', saleAPI.checkVip)
+
+
+//账户
+Mock.mock(/\/admin\/account\/list/, 'get', accountAPI.getAccountList)
+Mock.mock(/\/admin\/account\/add/, 'post', accountAPI.addAccount)
+Mock.mock(/\/admin\/account\/edit/, 'post', accountAPI.editAccount)
 
 export default Mock
