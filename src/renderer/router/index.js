@@ -40,7 +40,8 @@ export const asyncRouterMap = [
     name: 'stock',
     meta: {
       title: 'stock',
-      icon: 'stock'
+      icon: 'stock',
+      roles: ['stocker']
     },
     children: [
       { path: 'storage', component: _import('stock/storage/index'), name: 'storage', meta: { title: 'storageStock', noCache: true,icon:'storageStock' }},
@@ -54,7 +55,8 @@ export const asyncRouterMap = [
     name: 'account',
     meta: {
       title: 'accountAdmin',
-      icon: 'management'
+      icon: 'management',
+      roles: ['manager']
     },
     children: [
       { path: 'addAccount', component: _import('account/addAccount/index'), name: 'addAccount', meta: { title: 'addAccount', noCache: true,icon:'addAccount' }},
@@ -65,7 +67,7 @@ export const asyncRouterMap = [
     path: '/sale',
     component: Layout,
     redirect: '/sale/index',
-    meta: { roles: ['admin'] }, // you can set roles in root nav    
+    meta: { roles: ['saler'] }, // you can set roles in root nav    
     children: [{
       path: 'index',
       component: _import('sale/index'),
@@ -73,7 +75,6 @@ export const asyncRouterMap = [
       meta: {
         title: 'sale',
         icon: 'sale',
-        roles: ['admin'] // or you can only set roles in sub nav
       }
     }],
   },
@@ -81,7 +82,7 @@ export const asyncRouterMap = [
     path: '/addVip',
     component: Layout,
     redirect: '/addVip/index',
-    meta: { roles: ['admin'] }, // you can set roles in root nav    
+    meta: { roles: ['manager','saler'] }, // you can set roles in root nav    
     children: [{
       path: 'index',
       component: _import('addVip/index'),
@@ -89,7 +90,6 @@ export const asyncRouterMap = [
       meta: {
         title: 'vipAdd',
         icon: 'addVip',
-        roles: ['admin'] // or you can only set roles in sub nav
       }
     }],
   },

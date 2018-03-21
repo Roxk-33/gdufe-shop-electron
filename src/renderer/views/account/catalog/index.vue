@@ -84,15 +84,15 @@ export default {
         works : [
                 {
                     label:'前台销售人员',
-                    value:0
+                    value:'saler'
                 },
                 {
                     label:'库存管理人员',
-                    value:1
+                    value:'stocker'
                 },
                 {
                     label:'会计',
-                    value:2
+                    value:'accountant'
                 },
             ],
         AccountList : [],
@@ -149,13 +149,13 @@ export default {
         jobs:function(job){
             let result = '';
             switch (job) {
-                case 0:
+                case 'saler':
                     result = '前台销售人员'
                     break;
-                case 1:
+                case 'stocker':
                     result = '仓库管理人员'
                     break;
-                default:
+                case 'accountant':
                     result = '会计'                
                     break;
             }

@@ -53,15 +53,15 @@ export default {
             works : [
                 {
                     label:'前台销售人员',
-                    value:0
+                    value:'saler'
                 },
                 {
                     label:'库存管理人员',
-                    value:1
+                    value:'stocker'
                 },
                 {
                     label:'会计',
-                    value:2
+                    value:'accountant'
                 },
             ],
             postForm: {

@@ -1,6 +1,6 @@
 <template>
   <div class="stock-container">
-        <el-table border   :data="dormitorys" v-loading="listLoading" highlight-current-row style="width: 90%; margin:50px auto;">
+        <el-table border   :data="goods" v-loading="listLoading" highlight-current-row style="width: 90%; margin:50px auto;">
             
             <el-table-column align='center' type="index" label="序号" width="70">
             </el-table-column>
@@ -30,6 +30,7 @@
       data() {
 
         return {
+          goods:[],
           loading: false
         }
       },
