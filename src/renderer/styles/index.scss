@@ -10,6 +10,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  background-color: #f1f1f1!important;
   font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
 }
 
@@ -193,12 +194,18 @@ code {
 }
 
 .shop-container {
-  width: 80%;
+  width: 95%;
   min-width: 700px;
-  margin: 40px auto;
+  margin: 20px auto;
+
+  min-height: 200px;
+  padding: 15px 30px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 2px 3px 0 rgba(0,0,0,.047);
 }
 .shop-title{
-  padding: 10px 5px;
+  padding: 10px 5px 20px 10px;
   color: gray;
-  // border-bottom: 1px solid gray;
+  border-bottom: .5px solid rgba(128, 128, 128, 0.34);
 }

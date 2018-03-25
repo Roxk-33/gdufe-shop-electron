@@ -1,5 +1,5 @@
 <template>
-<div class="shop-container">
+<div class="shop-container sale-container">
     <div>
         <p class='shop-title'>会员</p>
         <transition name="el-fade-in-linear">
@@ -31,7 +31,7 @@
             <el-input-number v-model="postForm.goodNum" :min="1"  label="购买数量"></el-input-number>
         </el-form-item>
         <el-form-item >
-            <el-button type="primary" @click="pushCart()" style="width:150px;" v-loading="loading">添加</el-button>
+            <el-button type="primary" @click="pushCart()" style="width:100px;" v-loading="loading">添加</el-button>
         </el-form-item>
         </el-form>
     </div>
@@ -154,7 +154,7 @@ export default {
                 });
                 this.loading = false;
                 info.good_total = 0;
-                info.good_total = (parseInt(info.good_num) * parseFloat(info.good_price)).toFixed(1);
+                info.good_total = parseFloat((parseInt(this.postForm.goodNum) * parseFloat(info.good_price)).toFixed(1));
                 this.cartList.push(info);
               }else{
                   this.$message.error(rep.data.message);
@@ -169,7 +169,20 @@ export default {
       });
     },
     Clearing() {
-      this.dialogVisible = false;
+      cleanCart({order:this.cartList,userId:this.vipInfo.userId,pay:this.pay}).then( res =>{
+        if(res.data.status){
+          this.$message({
+              message: '结算成功',
+              type: "success"
+          });
+          this.cartList = [];
+          this.vipInfo = {};
+          this.showVip = true;
+          this.dialogVisible = false;
+          this.pay = '';
+
+        }
+      })
     },
     delGood(index){
       this.cartList.splice(index,1);
@@ -206,9 +219,8 @@ export default {
     TotalPrice(){
         let temp = 0;
         this.cartList.forEach(element => {
-          console.log(1);
-          console.log(element.good_total);
-              temp += element.good_total;
+         
+              temp =  temp + element.good_total;
         });
         return temp;
     },
@@ -230,10 +242,10 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss">
-  .shop-container .input-with-select{
+  .sale-container .input-with-select{
     width: 420px;
   }
-  .shop-container .el-select .el-input {
+  .sale-container .el-select .el-input {
     width: 120px;
   }
   .vip-card{

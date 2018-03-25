@@ -1,12 +1,18 @@
 <template>
 <div class="shop-container">
   
-    <el-form  :model="postForm"  ref="postForm" :rules="rules"  label-width="80px">
-        <el-form-item label="商品编号" prop="goodNo">
-            <el-input v-model.number="postForm.goodNo" placeholder="商品编号" required></el-input>
+    <el-form  :model="postForm"  ref="postForm" :rules="rules" class="demo-form-inline">
+        <el-form-item label="商品名称" prop='goodName'>
+            <el-input v-model="postForm.goodName" placeholder="商品名称" required></el-input>
         </el-form-item>
-        <el-form-item label="入库数量" prop="supplier">
-            <el-input v-model="postForm.goodNum" placeholder="入库数量" required></el-input>
+        <el-form-item label="供应商" prop="supplier">
+            <el-input v-model="postForm.supplier" placeholder="入库数量" required></el-input>
+        </el-form-item>
+        <el-form-item label="成本价" prop="cost">
+            <el-input v-model.number="postForm.cost" placeholder="成本价" required></el-input>
+        </el-form-item>
+         <el-form-item label="库存警告值" prop="warmNum">
+            <el-input v-model.number="postForm.warmNum" placeholder="库存警告值"></el-input>
         </el-form-item>
         <el-form-item style="display:block;text-align: center;">
             <el-button type="primary" @click="onSubmit" style="width:150px;" v-loading="loading">入库</el-button>
@@ -16,32 +22,24 @@
 </template>
 
 <script>
-import { goodINstock } from "@/api/stock";
+import { addGoodInfo } from "@/api/good";
 const defaultForm = {
-  goodNo: "",
-  goodNum: 0,
+  goodName: "",
+  supplier:'',
+  cost:0,
+  warmNum:'',
 };
 export default {
-  name: "storage",
+  name: "addGoodInfo",
   data() {
-    const validateRequire = (rule, value, callback) => {
-      if (value === "") {
-        this.$message({
-          message: rule.field + "为必传项",
-          type: "error"
-        });
-        callback(null);
-      } else {
-        callback();
-      }
-    };
-
+   
     return {
       postForm: Object.assign({}, defaultForm),
       fetchSuccess: true,
       loading: false,
       rules: {
-        goodNo: [
+        
+        cost: [
           {
             type: "number",
             required: true,
@@ -65,7 +63,7 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
             this.loading = true;
-            goodINstock(postForm).then(response => {
+            addGoodInfo(postForm).then(response => {
                     this.$message({
                         message: "操作成功",
                         type: "success"

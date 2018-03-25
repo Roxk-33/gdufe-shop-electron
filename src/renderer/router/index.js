@@ -40,11 +40,11 @@ export const asyncRouterMap = [
     name: 'stock',
     meta: {
       title: 'stock',
-      icon: 'stock',
+      icon: 'menu',
       roles: ['stocker']
     },
     children: [
-      { path: 'storage', component: _import('stock/storage/index'), name: 'storage', meta: { title: 'storageStock', noCache: true,icon:'storageStock' }},
+      { path: 'storage', component: _import('stock/storage/index'), name: 'storage', meta: { title: 'storage', noCache: true,icon:'storage' }},
       { path: 'catalog', component: _import('stock/catalog/index'), name: 'catalog', meta: { title: 'catalogStock', noCache: true,icon:'catalog' }},
     ],
   },
@@ -79,6 +79,39 @@ export const asyncRouterMap = [
     }],
   },
   {
+    path: '/addGood',
+    component: Layout,
+    redirect: '/addGood/index',
+    meta: { roles: ['saler'] }, // you can set roles in root nav    
+    children: [{
+      path: 'index',
+      component: _import('addGood/index'),
+      name: 'addGood',
+      meta: {
+        title: 'addGood',
+        icon: 'add',
+      }
+    }],
+  },
+
+  {
+    path: '/purchaseList_admin',
+    component: Layout,
+    redirect: 'noredirect',
+    name: 'purchaseList_admin',
+    meta: {
+      title: 'purchaseList_admin',
+      icon: 'management',
+      roles: ['manager']
+    },
+    children: [
+      { path: 'addPurchaseList', component: _import('addPurchaseList/index'), name: 'addPurchaseList', meta: {title: 'addPurchaseList',icon: 'add',}},
+      { path: 'purchaseList', component: _import('purchaseList/index'), name: 'purchaseList', meta: { title: 'purchaseList',  icon:'catalog' }},
+    ],
+  },
+
+
+  {
     path: '/addVip',
     component: Layout,
     redirect: '/addVip/index',
@@ -89,7 +122,22 @@ export const asyncRouterMap = [
       name: 'vipAdd',
       meta: {
         title: 'vipAdd',
-        icon: 'addVip',
+        icon: 'addAccount',
+      }
+    }],
+  },
+  {
+    path: '/purchaseList',
+    component: Layout,
+    redirect: '/purchaseList/index',
+    meta: { roles: ['manager','saler'] }, // you can set roles in root nav    
+    children: [{
+      path: 'index',
+      component: _import('purchaseList/index'),
+      name: 'purchaseList',
+      meta: {
+        title: 'purchaseList',
+        icon: 'menu',
       }
     }],
   },

@@ -9,7 +9,7 @@ export default {
                     no: '@id',
                     name: '@cname',
                     tel: 18024589062,
-                    "job|0-2": 2,
+                    "job|1": ['saler','stocker','accountant'],
                     'sex|0-1': 2
                 }
             ],

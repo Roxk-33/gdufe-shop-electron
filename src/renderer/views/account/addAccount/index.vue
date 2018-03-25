@@ -1,6 +1,6 @@
 <template>
   <div class='shop-container'>
-       <el-form  :model="postForm"  ref="postForm" :rules="rules" class='postForm'>
+       <el-form  :model="postForm"  ref="postForm" :rules="rules" class='postForm' label-width="100px">
         <el-form-item label="职工姓名：" prop="name">
             <el-input v-model="postForm.name" placeholder="姓名" required></el-input>
         </el-form-item>
@@ -98,9 +98,8 @@ export default {
 }
 </script>
 <style scoped>
-    .postForm{
+    .shop-container{
         width:400px;
-        margin: auto;
     }
     
 </style>

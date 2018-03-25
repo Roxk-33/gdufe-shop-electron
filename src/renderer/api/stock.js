@@ -7,3 +7,10 @@ export function goodINstock(data) {
     data
   })
 }
+export function getStockList(params) {
+  return request({
+    url: '/admin/stock/list',
+    method: 'get',
+    params
+  })
+}

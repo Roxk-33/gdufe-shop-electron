@@ -1,6 +1,10 @@
 <template>
 <div class="shop-container">
         <p class='shop-title'>账户列表</p>
+    
+        <router-link to="/account/addAccount" >
+            <el-button icon='el-icon-plus' type="primary" round style='margin:20px 10px;'>添加账户</el-button>
+        </router-link>
         <el-table border :data="AccountList" v-loading="listLoading"  class='goodsList'>
             <el-table-column align='center' type="index" label="序号" width="70">
             </el-table-column>
@@ -30,7 +34,7 @@
 
         <el-dialog title="修改员工信息" :visible.sync="workerDialogVisible" width="30%" center>
             <div>
-                <el-form  :model="account"  ref="account" :rules="rules" class='postForm'>
+                <el-form  :model="account"  ref="account" :rules="rules" class='postForm' label-width="100px">
                     <el-form-item label="职工姓名：" prop="name">
                         <el-input v-model="account.name" placeholder="姓名" required></el-input>
                     </el-form-item>

@@ -12,7 +12,10 @@
       </el-tooltip>
       <el-dropdown class="avatar-container right-menu-item" trigger="click">
         <div class="avatar-wrapper">
-          <img class="user-avatar" :src="avatar+'?imageView2/1/w/80/h/80'">
+          
+          <label>{{name}}</label>
+          <!-- <img class="user-avatar" :src="avatar+'?imageView2/1/w/80/h/80'"> -->
+
           <i class="el-icon-caret-bottom"></i>
         </div>
         <el-dropdown-menu slot="dropdown">
@@ -106,6 +109,8 @@ export default {
     }
     .screenfull {
       height: 20px;
+      display: inline-flex;
+      align-items: center;
     }
     .international{
       vertical-align: top;
@@ -125,15 +130,11 @@ export default {
         cursor: pointer;
         margin-top: 5px;
         position: relative;
-        .user-avatar {
-          width: 40px;
-          height: 40px;
-          border-radius: 10px;
-        }
+        
         .el-icon-caret-bottom {
           position: absolute;
           right: -20px;
-          top: 25px;
+          top: 18px;
           font-size: 12px;
         }
       }
