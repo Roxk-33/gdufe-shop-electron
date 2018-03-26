@@ -23,7 +23,7 @@ export default {
         { label: '未采购清单', key: 'not' },
         { label: '已采购清单', key: 'done' },
       ],
-      activeName: 'CN',
+      activeName: 'all',
       createdTimes: 0
     }
   },

@@ -5,6 +5,7 @@ import remoteSearchAPI from './remoteSearch'
 import transactionAPI from './transaction'
 import saleAPI from './sale'
 import accountAPI from './account'
+import purchaseAPI from './purchaseList'
 
 // Mock.setup({
 //   timeout: '350-600'
@@ -40,5 +41,9 @@ Mock.mock(/\/front\/vip\/check/, 'get', saleAPI.checkVip)
 Mock.mock(/\/admin\/account\/list/, 'get', accountAPI.getAccountList)
 Mock.mock(/\/admin\/account\/add/, 'post', accountAPI.addAccount)
 Mock.mock(/\/admin\/account\/edit/, 'post', accountAPI.editAccount)
+
+
+Mock.mock(/\/admin\/purchase\/list/, 'get', purchaseAPI.fetchList)
+Mock.mock(/\/admin\/purchase\/detail/, 'get', purchaseAPI.fetchListDetail)
 
 export default Mock

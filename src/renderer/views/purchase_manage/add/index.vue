@@ -2,12 +2,15 @@
 <div class="shop-container ">
     <div>
         <p class='shop-title'>添加商品</p>
-        <el-form :inline="true" :model="postForm"  ref="postForm" :rules="rules" class="demo-form-inline">
+        <el-form  :model="postForm"  ref="postForm" :rules="rules" label-width="100px">
         <el-form-item label="商品编号" prop="goodNo">
-            <el-input v-model.number="postForm.goodNo" placeholder="商品编号" required :fetch-suggestions="querySearchAsync" @select="handleSelect"></el-input>
+            <el-input style="width:200px" v-model.number="postForm.goodNo" placeholder="商品编号" required :fetch-suggestions="querySearchAsync" @select="handleSelect"></el-input>
         </el-form-item>
         <el-form-item label="购买数量" prop="goodNum">
             <el-input-number v-model="postForm.goodNum" :min="1"  label="购买数量"></el-input-number>
+        </el-form-item>
+        <el-form-item label="重要性" prop="goodNum">
+            <el-rate v-model="value2" :colors="['#99A9BF', '#E6A23C', '#F56C6C']" :low-threshold='2' :high-threshold='4' style='margin-top: 8px;'></el-rate>       
         </el-form-item>
         <el-form-item >
             <el-button type="primary" @click="pushCart()" style="width:150px;" v-loading="loading">添加</el-button>
@@ -35,8 +38,10 @@
               </template>
             </el-table-column>
         </el-table>
-        <el-button type="success" @click="postList" style="float:right;" >提交</el-button>
-        <el-button type="danger" @click="Empty" style="float:right;margin-right:10px;" :disabled="isEmpty">清空</el-button>
+        <div style="margin-top:30px;">
+           <el-button type="success" @click="postList" style="float:right;" >提交</el-button>
+            <el-button type="danger" @click="Empty" style="float:right;margin-right:10px;" :disabled="isEmpty">清空</el-button>
+        </div>
     </div>
     
 </div>
@@ -151,7 +156,9 @@ export default {
     }
   },
   computed:{
-    
+    isEmpty(){
+      return this.cartList.length == 0
+    }
   }
 };
 </script>

@@ -105,8 +105,8 @@ export const asyncRouterMap = [
       roles: ['manager']
     },
     children: [
-      { path: 'addPurchaseList', component: _import('addPurchaseList/index'), name: 'addPurchaseList', meta: {title: 'addPurchaseList',icon: 'add',}},
-      { path: 'purchaseList', component: _import('purchaseList/index'), name: 'purchaseList', meta: { title: 'purchaseList',  icon:'catalog' }},
+      { path: 'list', component: _import('purchase_manage/list/index'), name: 'purchaseList', meta: {title: 'purchaseList',icon: 'catalog',}},
+      { path: 'add', component: _import('purchase_manage/add/index'), name: 'addPurchase', meta: { title: 'addPurchase',  icon:'add' }},
     ],
   },
 
@@ -127,19 +127,20 @@ export const asyncRouterMap = [
     }],
   },
   {
-    path: '/purchaseList',
+    path: '/purchaseBystock',
     component: Layout,
-    redirect: '/purchaseList/index',
+    redirect: 'noredirect',
     meta: { roles: ['manager','saler'] }, // you can set roles in root nav    
     children: [{
-      path: 'index',
-      component: _import('purchaseList/index'),
+      path: 'list',
+      component: _import('purchase_stock/index'),
       name: 'purchaseList',
       meta: {
         title: 'purchaseList',
         icon: 'menu',
-      }
-    }],
+      }   
+    }
+    ],
   },
   { path: '*', redirect: '/404', hidden: true }
 ]
