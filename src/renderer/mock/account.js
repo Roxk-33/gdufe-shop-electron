@@ -17,13 +17,16 @@ export default {
         })
         return data
     },
-    addAccount(){
+    addAccount(data){
+        console.log(data);
+        
         return{
             status:true,
             
         }
     },
-    editAccount(){
+    editAccount(data){
+        console.log(data);
         return{
             status:true,
             

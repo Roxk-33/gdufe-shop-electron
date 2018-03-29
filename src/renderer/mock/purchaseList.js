@@ -1,6 +1,5 @@
 import Mock from 'mockjs'
 
-
 export default {
     fetchList: () => {
         let data = Mock.mock({
@@ -17,19 +16,44 @@ export default {
         })
         return data
     },
-    fetchListDetail: () => {
+    fetchListDetail: (p) => {
         let data = Mock.mock({
             'info|4-10':[
                 {
-                    'good_no|1-100000': 10000,
-                    'purchase_num|1-10': 10,
-                    'purchase_status|0-2': 2,
-                    good_name: '@word'
+                    'goodNo|1-100000': 10000,
+                    'purchaseNum|1-10': 10,
+                    'purchaseStatus|0-2': 2,
+                    goodName: '@word'
                 }
             ],
             status : true
         })
         return data
-    }
+    },
+    fetchGoodInfo: (param) => {
+        console.log(param);
+        let data = Mock.mock({
+            'info|1-10':[
+                {
+                    'goodNo|1-100000': 10000,
+                    'goodName': '@word'
+                }
+            ],
+            status : true
+        })
+        return data
+    },
+    addList: (data) => {
+        console.log(data);
+        return {
+            status:true
+        }
+    },
+    updateList: (data) => {
+        console.log(data);
+        return {
+            status:true
+        }
+    },
 
 }

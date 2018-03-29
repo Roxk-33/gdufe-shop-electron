@@ -6,11 +6,12 @@ import transactionAPI from './transaction'
 import saleAPI from './sale'
 import accountAPI from './account'
 import purchaseAPI from './purchaseList'
+import goodAPI from './good'
 
 // Mock.setup({
 //   timeout: '350-600'
 // })
-
+if (process.env.NODE_ENV === 'development') {
 // 登录相关
 Mock.mock(/\/login\/login/, 'post', loginAPI.loginByUsername)
 Mock.mock(/\/login\/logout/, 'post', loginAPI.logout)
@@ -45,5 +46,13 @@ Mock.mock(/\/admin\/account\/edit/, 'post', accountAPI.editAccount)
 
 Mock.mock(/\/admin\/purchase\/list/, 'get', purchaseAPI.fetchList)
 Mock.mock(/\/admin\/purchase\/detail/, 'get', purchaseAPI.fetchListDetail)
+Mock.mock(/\/admin\/good\/ajax\/goodInfo/, 'get', purchaseAPI.fetchGoodInfo)
+Mock.mock(/\/admin\/purchase\/add/, 'post', purchaseAPI.addList)
+Mock.mock(/\/admin\/purchase\/storage/, 'post', purchaseAPI.updateList)
+
+
+
+Mock.mock(/\/admin\/good\/info/, 'post', goodAPI.addGoodInfo)
+}
 
 export default Mock

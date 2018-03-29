@@ -21,4 +21,11 @@ export function editAccount(data) {
     data
   })
 }
+export function delAccount(params) {
+  return request({
+    url: '/admin/account/delete',
+    method: 'get',
+    params
+  })
+}
 

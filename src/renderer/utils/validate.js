@@ -37,7 +37,7 @@ export function validatAlphabets(str) {
  * @returns {boolean}
  */
 export function validateTel(tel) {
-  const re = /^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(18[0,5-9]))\\d{8}$/
+  const re = /^1[3|4|5|8][0-9]\d{4,8}$/
   return re.test(tel)
 }
 

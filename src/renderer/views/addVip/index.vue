@@ -34,11 +34,11 @@ export default {
                 if (!Number.isInteger(value)) {
                     callback(new Error('请输入数字值'));
                 }else {
-                    // if (!validateTel(value)) {
-                    //     callback(new Error('请输入电话号码'));
-                    // } else {
+                    if (!validateTel(value)) {
+                        callback(new Error('请输入电话号码'));
+                    } else {
                         callback();
-                    // }
+                    }
                 }
             }, 1000);
         };

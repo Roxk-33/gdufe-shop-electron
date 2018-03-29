@@ -27,19 +27,37 @@
             <el-table-column align='center' label="操作" width="200">
               <template slot-scope="scope">
                  <el-button type="primary"  icon='el-icon-edit' @click="workerDialogVisible = true;account = scope.row" ></el-button>
-                 <el-button type="danger"  icon='el-icon-delete' @click="delAccount(scope.$index)"></el-button>
+                 <el-button type="danger"  icon='el-icon-delete' @click="delData(scope.row.id)"></el-button>
               </template>
             </el-table-column>
         </el-table>
-
+        <div class="pagination">
+          <el-pagination
+            @current-change="getList"
+            :current-page.sync="currentPage"
+            :page-size="100"
+            layout="total, prev, pager, next, jumper"
+            :total="total_page">
+        </el-pagination>
+  </div>
         <el-dialog title="修改员工信息" :visible.sync="workerDialogVisible" width="30%" center>
             <div>
                 <el-form  :model="account"  ref="account" :rules="rules" class='postForm' label-width="100px">
                     <el-form-item label="职工姓名：" prop="name">
-                        <el-input v-model="account.name" placeholder="姓名" required></el-input>
+                        <el-input v-model="account.name"  readonly=""></el-input>                        
                     </el-form-item>
+                   
                     <el-form-item label="职工电话：" prop="tel">
                         <el-input v-model.number="account.tel" placeholder="电话" required></el-input>
+                    </el-form-item>
+                    <el-form-item label="原密码：" prop="password_old">
+                        <el-input type="password" v-model="account.password_old" placeholder="原密码" required></el-input>
+                    </el-form-item>
+                    <el-form-item label="密码：" prop="password">
+                        <el-input type="password" v-model="account.password" placeholder="密码" required></el-input>
+                    </el-form-item>
+                    <el-form-item label="确认密码：" prop="checkPass">
+                        <el-input type="password" v-model="account.checkPass" placeholder="确认密码" auto-complete="off"></el-input>
                     </el-form-item>
                     <el-form-item label="职工性别：" prop="sex">
                         <el-radio-group v-model="account.sex">
@@ -48,10 +66,11 @@
                         </el-radio-group>
                     </el-form-item>
                     <el-form-item label="职工职位：" prop="work">
-                        <el-select v-model="account.job" placeholder="请选择">
+                        <el-select v-model="account.job" placeholder="请选择" width='200px'>
                             <el-option v-for="item in works" :key="item.value" :label="item.label" :value="item.value"></el-option>
                         </el-select>
                     </el-form-item>
+
                     
                 </el-form>
             </div>
@@ -68,7 +87,7 @@ import { getAccountList, editAccount, delAccount } from '@/api/account'
 export default {
   name: "accountMenu",
   data() {
-    var checkTel = (rule, value, callback) => {
+        var checkTel = (rule, value, callback) => {
             if (!value) {
                 return callback(new Error('电话不能为空'));
             }
@@ -76,13 +95,34 @@ export default {
                 if (!Number.isInteger(value)) {
                     callback(new Error('请输入数字值'));
                 }else {
-                    // if (!validateTel(value)) {
-                    //     callback(new Error('请输入电话号码'));
-                    // } else {
+                    if (!validateTel(value)) {
+                        callback(new Error('请输入电话号码'));
+                    } else {
                         callback();
-                    // }
+                    }
                 }
             }, 1000);
+        };
+
+
+        var validatePass = (rule, value, callback) => {
+            if (value === '') {
+                callback(new Error('请输入密码'));
+            } else {
+            if (this.account.checkPass !== '') {
+                this.$refs.account.validateField('checkPass');
+            }
+                callback();
+            }
+        };
+        var checkPass = (rule, value, callback) => {
+            if (value === '') {
+                callback(new Error('请再次输入密码'));
+            } else if (value !== this.account.password) {
+                callback(new Error('两次输入密码不一致!'));
+            } else {
+                callback();
+            }
         };
     return {
         works : [
@@ -98,25 +138,33 @@ export default {
                     label:'会计',
                     value:'accountant'
                 },
-            ],
+        ],
         AccountList : [],
         listLoading : true,
         account:{},
         workerDialogVisible : false,
         rules: {
             tel:  { validator: checkTel, trigger: 'blur' },
-        }
+            account: [{ required: true, message: '请输入账户', trigger: 'blur' }],
+            name: [{ required: true, message: '请输入员工姓名', trigger: 'blur' }],
+            password: [{ validator: validatePass,  trigger: 'blur' }],
+            checkPass: [{ validator: checkPass, trigger: 'blur' }],
+        },
+        currentPage:1,
+        size:20,
+        total_page : 100,
     };
   },
   methods: {
-    delAccount(index){
-        delAccount().then( resp =>{
+    delData(id){
+        delAccount({id}).then( resp =>{
             if(rep.data.status){
                 this.workerDialogVisible = false;
                 this.$message({
                     message: rep.data.message,
                     type: "success"
                 });
+                this.fetchAccount();
             }else{
                 this.$message.error(rep.data.message);
             }
@@ -125,7 +173,8 @@ export default {
     fetchAccount(){
             this.$refs["account"].validate(valid => {
                 if(valid){
-                    editAccount(this.postForm).then( rep =>{
+                    delete this.account.checkPass;
+                    editAccount({account:this.account}).then( rep =>{
                         if(rep.data.status){
                             this.workerDialogVisible = false;
                             this.$message({
@@ -138,16 +187,27 @@ export default {
                     })
                 }
             })    
+    },
+    getList(){
+         getAccountList({page:this.currentPage,size:this.size}).then( rep=>{
+            this.AccountList = rep.data.info;
+            this.total_page = rep.data.total;
+            
+            this.listLoading = false;
+        })
     }  
   },
   computed:{
    
   },
-    created(){
-        getAccountList().then( rep=>{
-            this.AccountList = rep.data.info;
-            this.listLoading = false;
-        })
+    // created(){
+    //     getAccountList({page:this.currentPage,size:this.size}).then( rep=>{
+    //         this.AccountList = rep.data.info;
+    //         this.listLoading = false;
+    //     })
+    // },
+    mounted(){
+         this.getList();
     },
    filters:{
         jobs:function(job){
@@ -170,5 +230,8 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss">
- 
+ .pagination{
+    float: right;
+    margin-top: 20px;
+  }
 </style>

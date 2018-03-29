@@ -23,3 +23,19 @@ export function delList(params) {
   })
 }
 
+export function addList(data) {
+  return request({
+    url: '/admin/purchase/add',
+    method: 'post',
+    data
+  })
+}
+
+export function updateList(data) {
+  return request({
+    url: '/admin/purchase/storage',
+    method: 'post',
+    data
+  })
+}
+

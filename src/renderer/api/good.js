@@ -8,3 +8,11 @@ export function addGoodInfo(data) {
     data
   })
 }
+
+export function fetchGood(params) {
+  return request({
+    url: '/admin/good/ajax/goodInfo',
+    method: 'get',
+    params
+  })
+}

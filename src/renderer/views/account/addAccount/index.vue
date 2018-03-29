@@ -13,10 +13,19 @@
                 <el-radio :label="1">女</el-radio>
             </el-radio-group>
         </el-form-item>
-        <el-form-item label="职工职位：" prop="work">
-            <el-select v-model="postForm.work" placeholder="请选择">
+        <el-form-item label="职工职位：" prop="job">
+            <el-select v-model="postForm.job" placeholder="请选择">
                 <el-option v-for="item in works" :key="item.value" :label="item.label" :value="item.value"></el-option>
             </el-select>
+        </el-form-item>
+        <el-form-item label="帐号：" prop="account">
+            <el-input v-model.number="postForm.account" placeholder="帐号" required></el-input>
+        </el-form-item>
+        <el-form-item label="密码：" prop="password">
+            <el-input type="password" v-model="postForm.password" placeholder="密码" required></el-input>
+        </el-form-item>
+        <el-form-item label="确认密码：" prop="checkPass">
+            <el-input type="password" v-model="postForm.checkPass" placeholder="确认密码" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item style="display:block;text-align: center;">
             <el-button type="primary" @click="fetchAccount" style="width:150px;" v-loading="loading">添加</el-button>
@@ -39,15 +48,36 @@ export default {
                 if (!Number.isInteger(value)) {
                     callback(new Error('请输入数字值'));
                 }else {
-                    // if (!validateTel(value)) {
-                    //     callback(new Error('请输入电话号码'));
-                    // } else {
+                    if (!validateTel(value)) {
+                        callback(new Error('请输入电话号码'));
+                    } else {
                         callback();
-                    // }
+                    }
                 }
             }, 1000);
         };
 
+
+        var validatePass = (rule, value, callback) => {
+            if (value === '') {
+                return callback(new Error('请输入密码'));
+            } else {
+            if (this.postForm.checkPass !== '') {
+                this.$refs.postForm.validateField('checkPass');
+            }
+                return callback();
+            }
+        };
+        var checkPass = (rule, value, callback) => {
+            
+            if (value === '') {
+                return callback(new Error('请再次输入密码'));
+            } else if (value !== this.postForm.password) {
+                return callback(new Error('两次输入密码不一致!'));
+            } else {
+                return callback();
+            }
+        };
         return {
             loading : false,
             works : [
@@ -66,12 +96,18 @@ export default {
             ],
             postForm: {
                 name: '',
-                sex: 1,
+                sex: 0,
                 tel: '',
-                work:0
+                job:'',
+                password : '',
+                checkPass : ''
             },
             rules: {
                 tel:  { validator: checkTel, trigger: 'blur' },
+                account: [{ required: true, message: '请输入账户', trigger: 'blur' }],
+                name: [{ required: true, message: '请输入员工姓名', trigger: 'blur' }],
+                password: [{ validator: validatePass,  trigger: 'blur' }],
+                checkPass: [{ validator: checkPass, trigger: 'blur' }]
             }
 
         }
@@ -81,12 +117,14 @@ export default {
             this.$refs["postForm"].validate(valid => {
                 if(valid){
                     addAccount(this.postForm).then( rep =>{
-                        console.log(rep);
+                        
                         if(rep.data.status){
                             this.$message({
                                 message: rep.data.message,
                                 type: "success"
                             });
+                        this.$router.push({path: "/account/catalogAccount"});
+
                         }else{
                             this.$message.error(rep.data.message);
                         }

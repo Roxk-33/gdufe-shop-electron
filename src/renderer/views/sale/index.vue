@@ -228,7 +228,7 @@ export default {
       return this.cartList.length == 0;
     },
     ChangeMoney(){
-      return this.pay - this.TotalPrice 
+      return (this.pay - this.TotalPrice).toFixed(1); 
     },
     isEnough(){
       return this.pay >= this.TotalPrice || this.pay == 0

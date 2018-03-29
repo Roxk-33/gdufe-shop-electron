@@ -82,14 +82,14 @@ export const asyncRouterMap = [
     path: '/addGood',
     component: Layout,
     redirect: '/addGood/index',
-    meta: { roles: ['saler'] }, // you can set roles in root nav    
+    meta: { roles: ['accountant'] }, // you can set roles in root nav    
     children: [{
       path: 'index',
       component: _import('addGood/index'),
       name: 'addGood',
       meta: {
         title: 'addGood',
-        icon: 'add',
+        icon: 'adjunction',
       }
     }],
   },
@@ -106,7 +106,7 @@ export const asyncRouterMap = [
     },
     children: [
       { path: 'list', component: _import('purchase_manage/list/index'), name: 'purchaseList', meta: {title: 'purchaseList',icon: 'catalog',}},
-      { path: 'add', component: _import('purchase_manage/add/index'), name: 'addPurchase', meta: { title: 'addPurchase',  icon:'add' }},
+      { path: 'adjunction', component: _import('purchase_manage/add/index'), name: 'addPurchase', meta: { title: 'addPurchase',  icon:'adjunction' }},
     ],
   },
 
@@ -115,7 +115,7 @@ export const asyncRouterMap = [
     path: '/addVip',
     component: Layout,
     redirect: '/addVip/index',
-    meta: { roles: ['manager','saler'] }, // you can set roles in root nav    
+    meta: { roles: ['saler'] }, // you can set roles in root nav    
     children: [{
       path: 'index',
       component: _import('addVip/index'),
@@ -130,14 +130,14 @@ export const asyncRouterMap = [
     path: '/purchaseBystock',
     component: Layout,
     redirect: 'noredirect',
-    meta: { roles: ['manager','saler'] }, // you can set roles in root nav    
+    meta: { roles: ['stocker'] }, 
     children: [{
       path: 'list',
       component: _import('purchase_stock/index'),
       name: 'purchaseList',
       meta: {
         title: 'purchaseList',
-        icon: 'menu',
+        icon: 'catalog',
       }   
     }
     ],
