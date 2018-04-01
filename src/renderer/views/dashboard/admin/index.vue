@@ -24,7 +24,7 @@
         </div>
       </el-col>
     </el-row>
-
+    
     <el-row :gutter="8">
       <!-- <el-col :xs="{span: 12}" :sm="{span: 12}" :md="{span: 12}" :lg="{span: 6}" :xl="{span: 5}">
         <box-card></box-card>
@@ -69,7 +69,7 @@ export default {
     RaddarChart,
     PieChart,
     BarChart,
-    BoxCard
+    BoxCard,
   },
   data() {
     return {

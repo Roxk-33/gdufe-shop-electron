@@ -1,10 +1,11 @@
 import request from '@/utils/request'
 
 
-export function getAccountList() {
+export function getAccountList(params) {
   return request({
     url: '/admin/account/list',
-    method: 'get'
+    method: 'get',
+    params
   })
 }
 export function addAccount(data) {

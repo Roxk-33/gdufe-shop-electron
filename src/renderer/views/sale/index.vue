@@ -57,7 +57,7 @@
             </el-table-column>
         </el-table>
         <el-button type="success" @click="dialogVisible = true" style="float:right;" >结算</el-button>
-        <el-button type="danger" @click="Empty" style="float:right;margin-right:10px;" :disabled="isEmpty">清空</el-button>
+        <el-button type="danger" @click="emptyCart" style="float:right;margin-right:10px;" :disabled="isEmpty">清空</el-button>
     </div>
     <el-dialog title="结算" :visible.sync="dialogVisible" width="30%">
       <div class='pay-box'>
@@ -179,15 +179,14 @@ export default {
           this.vipInfo = {};
           this.showVip = true;
           this.dialogVisible = false;
-          this.pay = '';
-
+          this.pay = 0;
         }
       })
     },
     delGood(index){
       this.cartList.splice(index,1);
     },
-    Empty() {
+    emptyCart() {
       this.cartList = [];
     },
     getVipInfo(){
@@ -219,9 +218,9 @@ export default {
     TotalPrice(){
         let temp = 0;
         this.cartList.forEach(element => {
-         
-              temp =  temp + element.good_total;
+          temp =  temp + element.good_total;
         });
+        console.log("temp:" + temp);
         return temp;
     },
     isEmpty(){

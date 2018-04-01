@@ -35,7 +35,7 @@
           <el-pagination
             @current-change="getList"
             :current-page.sync="currentPage"
-            :page-size="100"
+            :page-size="size"
             layout="total, prev, pager, next, jumper"
             :total="total_page">
         </el-pagination>

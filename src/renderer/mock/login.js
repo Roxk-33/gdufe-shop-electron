@@ -1,9 +1,10 @@
 import { param2Obj } from '@/utils'
 
 const userMap = {
-  manager: {
+  admin: {
     role: 'manager',
-    name: 'Super Admin'
+    name: 'Super Admin',
+    status:true
   },
   saler: {
     role: 'saler',

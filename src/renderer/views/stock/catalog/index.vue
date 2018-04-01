@@ -5,29 +5,29 @@
 
         <el-table border   :data="goods"  highlight-current-row style="width: 90%; margin:50px auto;">
             
-            <el-table-column align='center' type="index" label="序号" width="70">
+            <el-table-column align='center' type="index" label="序号" >
             </el-table-column>
-            <el-table-column align='center' prop="goodNo" label="商品编号" width="200" >
+            <el-table-column align='center' prop="goodNo" label="商品编号">
             </el-table-column>
-            <el-table-column align='center' prop="goodName" label="商品名" width="200" >
+            <el-table-column align='center' prop="goodName" label="商品名">
             </el-table-column>
-            <el-table-column align='center' prop="goodStock" label="库存" width="200">
+            <el-table-column align='center' prop="goodStock" label="库存">
             </el-table-column>
-            <el-table-column align='center' label="操作">
+            <!-- <el-table-column align='center' label="操作">
                 <template slot-scope="scope">
                     <el-button type="primary" size="medium" @click="editGood(scope.row)"
                                icon="el-icon-edit" v-if="scope.row.stuNum < 4">编辑
                     </el-button>
                   
                 </template>
-            </el-table-column>
+            </el-table-column> -->
         </el-table>
 
         <div class="pagination">
           <el-pagination
-            @current-change="getGoodStockList"
+            @current-change="getList"
             :current-page.sync="currentPage"
-            :page-size="100"
+            :page-size="size"
             layout="total, prev, pager, next, jumper"
             :total="total_page">
           </el-pagination>
@@ -36,7 +36,7 @@
 </template>
 
 <script>
-    import { getStockList } from "@/api/stock";
+    import { fetchStockList } from "@/api/stock";
     export default {
       name: 'stockCatalog',
       data() {
@@ -53,9 +53,9 @@
         editGood(target){
 
         },
-        getGoodStockList(){
-          getStockList({page:this.currentPage,size:this.size}).then(rep => {
-            if (rep.data.statuse) {
+        getList(){
+          fetchStockList({page:this.currentPage,size:this.size}).then(rep => {
+            if (rep.data.status) {
               this.goods = rep.data.info;
               this.total_page = rep.data.total;
             }else{
@@ -64,8 +64,8 @@
           })
         }
       },
-      created(){
-        this.getGoodStockList();
+      mounted(){
+         this.getList();
       }
     }
 </script>

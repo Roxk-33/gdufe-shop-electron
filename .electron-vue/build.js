@@ -1,6 +1,7 @@
 'use strict'
 
 process.env.NODE_ENV = 'production'
+process.env.API_ROOT = 'http://47.106.107.239/MarketServer/'
 
 const { say } = require('cfonts')
 const chalk = require('chalk')
