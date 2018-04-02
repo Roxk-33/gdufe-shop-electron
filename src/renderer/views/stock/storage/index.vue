@@ -65,17 +65,13 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
             this.loading = true;
-            goodINstock(postForm).then(response => {
-                    this.$message({
-                        message: "操作成功",
-                        type: "success"
-                    });
-                    this.loading = true;
-                })
-                .catch(err => {
-                    this.loading = false;
-                    this.$message({message: err,type: "error"});
-                });
+            goodINstock(postForm).then( data => {
+                this.loading = false;
+            })
+            .catch(err => {
+                this.loading = false;
+                this.$message({message: err,type: "error"});
+            });
         } else {
             
         }

@@ -109,18 +109,16 @@ export default {
     getList() {
       this.loading = true
       this.$emit('create') // for test
-      fetchList({page:this.currentPage,size:this.size}).then(response => {
-        this.list = response.data.info;
-        this.total_page = response.data.total;        
+      fetchList({page:this.currentPage,size:this.size}).then( data => {
+        this.list = data.info;
+        this.total_page = data.total;        
         this.loading = false;
       })
     },
     getOrderDetail(no){
-      fetchListDetail({no}).then( rep=>{
-        if(rep.data.status){
+      fetchListDetail({no}).then( data =>{
           this.orderDialogVisible = true;
-          this.orderDetail = rep.data.info;
-        }
+          this.orderDetail = data.info;
       })
     },
     changeGoodStatus(index,status){
@@ -128,19 +126,11 @@ export default {
     },
     sumbitOrder(){
       console.log(this.orderDetail);
-      updateList({list : this.orderDetail}).then(rep=>{
-        if (rep.data.status) {
-          this.$message({
-            message: rep.data.message,
-            type: "success"
-          });
+      updateList({list : this.orderDetail}).then( data =>{
+        if (data.status) {
           this.orderDialogVisible = false;
           this.orderDetail = null;
         }else {
-          this.$message({
-            message: rep.data.message,
-            type: "warning"
-          });
           this.orderDialogVisible = false;
           this.orderDetail = null;
         }

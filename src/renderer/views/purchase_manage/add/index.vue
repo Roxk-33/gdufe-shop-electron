@@ -112,10 +112,8 @@ export default {
   methods: {
     
     querySearchAsync(query, cb) {
-       fetchGood({target : query}).then(rep=>{
-         if(rep.data.status){
-           cb(rep.data.info);
-         }
+       fetchGood({target : query}).then( data =>{
+           cb(res.data.info);
        })
     },
     handleSelect(item) {
@@ -127,18 +125,15 @@ export default {
       this.$refs["postForm"].validate(valid => {
         if (valid) {
 
-          fetchGood({goodNo : this.postForm.goodNo}).then(rep => {
-            if (rep.data.status) {
-              this.postForm.goodName = rep.data.info.goodName;
+          fetchGood({goodNo : this.postForm.goodNo}).then(data => {
+              this.postForm.goodName = data.info.goodName;
               this.goodList.push(this.postForm);
               this.postForm = Object.assign({}, defaultForm);
               this.$message({
                 message: "添加成功",
                 type: "success"
               });
-            }else {
-              this.$message.error(rep.data.message);
-            }
+            
           })
         } 
       });
@@ -149,16 +144,13 @@ export default {
         importance: this.importance,
         note : this.note
       }
-      addList(data).then(rep=>{
-        if (rep.data.stauts) {
+      addList(data).then( data =>{
+        
           this.$message({
               message: "添加成功",
               type: "success"
           });
-        }else {
-          this.$message.error(rep.data.message);
-          
-        }
+       
       })
     },
     delGood(index){

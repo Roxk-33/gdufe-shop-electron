@@ -106,30 +106,26 @@ export default {
     getList() {
       this.loading = true
       this.$emit('create') 
-      fetchList({page:this.currentPage,size:this.size}).then(response => {
-        this.list = response.data.info;
-        this.total_page = response.data.total;
-        this.loading = false
+      fetchList({page:this.currentPage,size:this.size}).then( data => {
+        this.list = data.info;
+        this.total_page = data.total;
+        this.loading = false;
       })
     },
     delOrder(no){
-      delList({no}).then( rep=>{
-        if(rep.data.status){
+      delList({no}).then( data =>{
+        
           this.$message({
-            message: rep.data.message,
+            message: data.message,
             type: "success"
-            });
-          }else{
-            this.$message.error(rep.data.message);
-          }
+          });
+         
       })
     },
     getOrderDetail(no){
-      fetchListDetail({no}).then( rep=>{
-        if(rep.data.status){
+      fetchListDetail({no}).then( data =>{
           this.orderDialogVisible = true;
-          this.orderDetail = rep.data.info;
-        }
+          this.orderDetail = data.info;
       })
     }
   }

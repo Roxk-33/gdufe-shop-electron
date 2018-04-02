@@ -60,15 +60,11 @@ export default {
         fetchVip(){
             this.$refs["postForm"].validate(valid => {
                 if(valid){
-                    addVip(this.postForm).then( rep =>{
-                        if(rep.data.status){
+                    addVip(this.postForm).then( data =>{
                             this.$message({
-                                message: rep.data.message,
+                                message: data.message,
                                 type: "success"
                             })
-                        }else{
-                            this.$message.error(rep.data.message);
-                        }
                     })
                 }
             })    

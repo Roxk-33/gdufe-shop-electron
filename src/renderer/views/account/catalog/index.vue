@@ -27,7 +27,7 @@
             <el-table-column align='center' label="操作" width="200">
               <template slot-scope="scope">
                  <el-button type="primary"  icon='el-icon-edit' @click="workerDialogVisible = true;account = scope.row" ></el-button>
-                 <el-button type="danger"  icon='el-icon-delete' @click="delData(scope.row.id)"></el-button>
+                 <el-button type="danger"  icon='el-icon-delete' @click="DelAccount(scope.row.id)"></el-button>
               </template>
             </el-table-column>
         </el-table>
@@ -156,59 +156,49 @@ export default {
     };
   },
   methods: {
-    delData(id){
-        delAccount({id}).then( resp =>{
-            if(rep.data.status){
-                this.workerDialogVisible = false;
-                this.$message({
-                    message: rep.data.message,
-                    type: "success"
-                });
-                this.fetchAccount();
-            }else{
-                this.$message.error(rep.data.message);
-            }
+    DelAccount(id){
+        delAccount({id}).then( data =>{
+           
+            this.workerDialogVisible = false;
+            this.$message({
+                message: data.message,
+                type: "success"
+            });
+            this.fetchAccount();
+        }).catch((message) => {
+            this.$message.error(message);
         })
     },
     fetchAccount(){
             this.$refs["account"].validate(valid => {
                 if(valid){
                     delete this.account.checkPass;
-                    editAccount({account:this.account}).then( rep =>{
-                        if(rep.data.status){
-                            this.workerDialogVisible = false;
-                            this.$message({
-                                message: rep.data.message,
-                                type: "success"
-                            });
-                        }else{
-                            this.$message.error(rep.data.message);
-                        }
+                    editAccount({account:this.account}).then( data =>{
+                        
+                        this.workerDialogVisible = false;
+                        this.$message({
+                            message: data.message,
+                            type: "success"
+                        });
+                    }).catch((message) => {
+                        this.$message.error(message);
                     })
                 }
             })    
     },
     getList(){
-         getAccountList({page:this.currentPage,size:this.size}).then( rep=>{
-            this.AccountList = rep.data.info;
-            this.total_page = rep.data.total;
-            
+        getAccountList({page:this.currentPage,size:this.size}).then( data =>{
+            this.AccountList = data.info;
+            this.total_page = data.total;
             this.listLoading = false;
+        }).catch((message) => {
+            this.$message.error(message);
         })
     }  
   },
-  computed:{
-   
-  },
-    // created(){
-    //     getAccountList({page:this.currentPage,size:this.size}).then( rep=>{
-    //         this.AccountList = rep.data.info;
-    //         this.listLoading = false;
-    //     })
-    // },
-    mounted(){
+  mounted(){
          this.getList();
-    },
+  },
    filters:{
         jobs:function(job){
             let result = '';

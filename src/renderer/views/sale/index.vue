@@ -145,20 +145,12 @@ export default {
         if (valid) {
           this.loading = true;
           addGood(this.postForm)
-            .then(response => {
-              const {status,info} = response.data;
-              if (status) {
-                this.$message({
-                  message: '添加成功',
-                  type: "success"
-                });
+            .then(data => {
+              const { status, info } = data;
                 this.loading = false;
                 info.good_total = 0;
                 info.good_total = parseFloat((parseInt(this.postForm.goodNum) * parseFloat(info.good_price)).toFixed(1));
                 this.cartList.push(info);
-              }else{
-                  this.$message.error(rep.data.message);
-              }
             })
             .catch(err => {
               this.loading = false;
@@ -169,18 +161,13 @@ export default {
       });
     },
     Clearing() {
-      cleanCart({order:this.cartList,userId:this.vipInfo.userId,pay:this.pay}).then( res =>{
-        if(res.data.status){
-          this.$message({
-              message: '结算成功',
-              type: "success"
-          });
-          this.cartList = [];
-          this.vipInfo = {};
-          this.showVip = true;
-          this.dialogVisible = false;
-          this.pay = 0;
-        }
+      cleanCart({order:this.cartList,userId:this.vipInfo.userId,pay:this.pay}).then( data =>{
+        
+        this.cartList = [];
+        this.vipInfo = {};
+        this.showVip = true;
+        this.dialogVisible = false;
+        this.pay = 0;
       })
     },
     delGood(index){
@@ -204,13 +191,9 @@ export default {
         });
         return;
       }
-      checkVip({no:this.vipNo}).then(rep => {
-        if(rep.data.status){
-            this.showVip = !this.showVip;
-            this.vipInfo = rep.data.info
-        }else{
-          this.$message.error(rep.data.message);
-        }
+      checkVip({no:this.vipNo}).then(data => {
+          this.showVip = !this.showVip;
+          this.vipInfo = res.data.info
       })
     }
   },
@@ -220,7 +203,6 @@ export default {
         this.cartList.forEach(element => {
           temp =  temp + element.good_total;
         });
-        console.log("temp:" + temp);
         return temp;
     },
     isEmpty(){

@@ -28,7 +28,7 @@
             <el-input type="password" v-model="postForm.checkPass" placeholder="确认密码" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item style="display:block;text-align: center;">
-            <el-button type="primary" @click="fetchAccount" style="width:150px;" v-loading="loading">添加</el-button>
+            <el-button type="primary" @click="fetchAccount" style="width:150px;" >添加</el-button>
         </el-form-item>
         </el-form>
   </div>
@@ -79,7 +79,6 @@ export default {
             }
         };
         return {
-            loading : false,
             works : [
                 {
                     label:'前台销售人员',
@@ -116,18 +115,14 @@ export default {
         fetchAccount(){
             this.$refs["postForm"].validate(valid => {
                 if(valid){
-                    addAccount(this.postForm).then( rep =>{
-                        
-                        if(rep.data.status){
-                            this.$message({
-                                message: rep.data.message,
-                                type: "success"
-                            });
+                    addAccount(this.postForm).then( data =>{
+                        this.$message({
+                            message: data.message,
+                            type: "success"
+                        });
                         this.$router.push({path: "/account/catalogAccount"});
-
-                        }else{
-                            this.$message.error(rep.data.message);
-                        }
+                    }).catch((message) => {
+                        this.$message.error(message);
                     })
                 }
             })    

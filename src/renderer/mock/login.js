@@ -1,10 +1,19 @@
 import { param2Obj } from '@/utils'
 
 const userMap = {
+  
   admin: {
+    role: 'admin',
+    name: 'Super Admin',
+    status:true,
+    token:'admin'
+  },
+  manager: {
     role: 'manager',
     name: 'Super Admin',
-    status:true
+    status:true,
+    token:'manager'
+    
   },
   saler: {
     role: 'saler',
@@ -23,16 +32,20 @@ const userMap = {
 export default {
   loginByUsername: config => {
     const { username } = JSON.parse(config.body)
-    console.log(username);
     return userMap[username]
   },
   getUserInfo: config => {
-    const { token } = param2Obj(config.url)
+    console.log(config);
+    const { token } = param2Obj(config.url);
     if (userMap[token]) {
       return userMap[token]
     } else {
       return false
     }
   },
-  logout: () => 'success'
+  logout: () => {
+    return {
+      status : true
+    }
+  }
 }

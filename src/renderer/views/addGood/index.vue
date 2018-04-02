@@ -92,16 +92,13 @@ export default {
     onSubmit() {
       this.$refs['postForm'].validate(valid => {
         if (valid) {
-            this.loading = true;
-            addGoodInfo({good:this.postForm}).then(response => {
+            addGoodInfo({good:this.postForm}).then(data => {
                     this.$message({
-                        message: "操作成功",
+                        message: data.message,
                         type: "success"
                     });
-                    this.loading = false;
                 })
                 .catch(err => {
-                    this.loading = false;
                     this.$message({message: err,type: "error"});
                 });
         } else {

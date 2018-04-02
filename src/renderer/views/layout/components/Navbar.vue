@@ -100,6 +100,8 @@ export default {
   .right-menu {
     float: right;
     height: 100%;
+    display: flex;
+    justify-content: center;
     &:focus{
      outline: none;
     }
@@ -108,7 +110,7 @@ export default {
       margin: 0 8px;
     }
     .screenfull {
-      height: 20px;
+      height: 50px;
       display: inline-flex;
       align-items: center;
     }
@@ -128,7 +130,6 @@ export default {
       margin-right: 30px;
       .avatar-wrapper {
         cursor: pointer;
-        margin-top: 5px;
         position: relative;
         
         .el-icon-caret-bottom {

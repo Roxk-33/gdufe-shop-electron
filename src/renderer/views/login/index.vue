@@ -8,13 +8,13 @@
         <span class="svg-container svg-container_login">
           <svg-icon name="user" scale="2.2"/>
         </span>
-        <el-input name="username" type="text" v-model="loginForm.username" autoComplete="on" placeholder="username" ></el-input>
+        <el-input name="username" type="text" v-model="loginForm.username" autoComplete="on" placeholder="账户" ></el-input>
       </el-form-item>
       <el-form-item prop="password">
         <span class="svg-container">
-          <svg-icon name="password" scale="1.7"/>
+          <svg-icon name="password" scale="1.6"/>
         </span>
-        <el-input name="password" :type="passwordType" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="on" placeholder="password" />
+        <el-input name="password" :type="passwordType" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="on" placeholder="密码" />
         <span class="show-pwd" @click="showPwd">
           <svg-icon name="eye" scale="2"/>
         </span>
@@ -145,7 +145,7 @@ $light_gray:#eee;
     position: absolute;
     left: 56%;
     right: 0;
-    width: 420px;
+    width: 320px;
     padding: 15px;
     margin: 220px auto;
     background-color:white;
@@ -163,7 +163,7 @@ $light_gray:#eee;
     }
   }
   .svg-container {
-    line-height: 3px;
+    line-height: 4px;
     padding: 0 3px;
     color: $dark_gray;
     vertical-align: middle;

@@ -54,13 +54,10 @@
 
         },
         getList(){
-          fetchStockList({page:this.currentPage,size:this.size}).then(rep => {
-            if (rep.data.status) {
-              this.goods = rep.data.info;
-              this.total_page = rep.data.total;
-            }else{
-              this.$message({message: rep.data.message,type: "error"});
-            }
+          fetchStockList({page:this.currentPage,size:this.size}).then(data => {
+              this.goods = data.info;
+              this.total_page = data.total;
+           
           })
         }
       },

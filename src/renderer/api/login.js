@@ -12,25 +12,19 @@ export function loginByUsername(username, password) {
   })
 }
 
-export function logout() {
+export function logout(params) {
   return request({
     url: '/login/logout',
-    method: 'post'
+    method: 'get',
+    params
   })
 }
 
-export function getUserInfo(token) {
+export function getUserInfo(params) {
   return request({
     url: '/user/info',
     method: 'get',
-    params: { token }
-  })
-}
-export function changePass(token) {
-  return request({
-    url: '/user/change',
-    method: 'get',
-    params: { token }
+    params
   })
 }
 
