@@ -2,7 +2,6 @@ import axios from 'axios'
 import { Message } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
-let ipath = process.env.API_ROOT;
 // create an axios instance
 const service = axios.create({
   baseURL: process.env.API_ROOT, // api的base_url

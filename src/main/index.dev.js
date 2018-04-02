@@ -9,7 +9,7 @@
 
 // Set environment for development
 process.env.NODE_ENV = 'development'
-
+process.env.API_ROOT = 'http://lococo.site/proxy/MarketServer'
 // Install `electron-debug` with `devtron`
 require('electron-debug')({ showDevTools: true })
 

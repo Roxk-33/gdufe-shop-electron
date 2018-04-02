@@ -75,6 +75,7 @@ export const asyncRouterMap = [
       meta: {
         title: 'sale',
         icon: 'sale',
+        noCache: false,
       }
     }],
   },

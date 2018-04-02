@@ -49,7 +49,6 @@ const user = {
       const username = userInfo.username.trim()
       return new Promise((resolve, reject) => {
         loginByUsername(username, userInfo.password).then( data => {
-
             commit('SET_TOKEN', data.token);
             setToken(data.token);
             resolve();
@@ -62,7 +61,6 @@ const user = {
     // 获取用户信息
     GetUserInfo({ commit, state} ) {
       return new Promise((resolve, reject) => {
-        console.log(1);
         
         getUserInfo({token : getToken()}).then( data =>{
           if(data.status){
@@ -71,8 +69,17 @@ const user = {
             commit('SET_NAME', name);
             resolve(role);
           }else{
+            commit('SET_TOKEN', '')
+            commit('SET_ROLES', '')
+            removeToken()
             reject(res.data.message);
           }
+        }).catch( err => {
+          commit('SET_TOKEN', '')
+          commit('SET_ROLES', '')
+          removeToken()
+          reject(err);
+          
         })
       })
     },

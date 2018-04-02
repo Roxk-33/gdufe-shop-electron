@@ -2,7 +2,7 @@
   <scroll-pane class='tags-view-container' ref='scrollPane'>
     <router-link ref='tag' class="tags-view-item" :class="isActive(tag)?'active':''" v-for="tag in Array.from(visitedViews)" :to="tag.path" :key="tag.path">
       {{generateTitle(tag.title)}}
-      <span class='el-icon-close' @click='closeViewTags(tag,$event)'></span>
+      <span class='el-icon-close' @click='closeViewTags(tag,$event)' v-if="tag.name !== 'dashboard'"></span>
     </router-link>
   </scroll-pane>
 </template>
@@ -15,7 +15,7 @@ export default {
   components: { ScrollPane },
   computed: {
     visitedViews() {
-      return this.$store.state.app.visitedViews
+      return this.$store.state.tagsView.visitedViews
     }
   },
   mounted() {
@@ -26,11 +26,12 @@ export default {
     closeViewTags(view, $event) {
       this.$store.dispatch('delVisitedViews', view).then((views) => {
         if (this.isActive(view)) {
-          const latestView = views.slice(-1)[0]
+          const latestView = views.slice(-1)[0];
           if (latestView) {
             this.$router.push(latestView.path)
           } else {
-            this.$router.push('/')
+            
+            this.$router.push('/');
           }
         }
       })
@@ -43,9 +44,9 @@ export default {
       return false
     },
     addViewTags() {
-      const route = this.generateRoute()
+      const route = this.generateRoute();
       if (!route) {
-        return false
+        return false;
       }
       this.$store.dispatch('addVisitedViews', route)
     },
