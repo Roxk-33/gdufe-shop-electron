@@ -12,6 +12,7 @@ const service = axios.create({
 service.interceptors.request.use(config => {
   // Do something before request is sent
   if (store.getters.token) {
+    config.headers.Authorization = `token ${store.state.token}`;
     config.headers['gdufe-shop'] = getToken() // 让每个请求携带token-- ['X-Token']为自定义key 请根据实际情况自行修改
   }
   return config
@@ -25,8 +26,7 @@ service.interceptors.request.use(config => {
 service.interceptors.response.use(
   response => {
       const res = response.data;
-
-      if (!res.status) {
+      if (!JSON.parse(res.status)) {
         Message({
           message: res.message,
           type: 'error',
@@ -49,8 +49,9 @@ service.interceptors.response.use(
         }
         return Promise.reject('error');
       } else {
-        return response.data;
+        return Promise.resolve(res)
       }
+
   },
   
   error => {

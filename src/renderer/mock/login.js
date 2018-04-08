@@ -2,11 +2,11 @@ import { param2Obj } from '@/utils'
 
 const userMap = {
   
-  admin: {
+  xiao: {
     role: 'admin',
     name: 'Super Admin',
     status:true,
-    token:'admin'
+    token:'xiao'
   },
   manager: {
     role: 'manager',
@@ -31,6 +31,7 @@ const userMap = {
 
 export default {
   loginByUsername: config => {
+    console.log(config.body);
     const { username } = JSON.parse(config.body)
     return userMap[username]
   },

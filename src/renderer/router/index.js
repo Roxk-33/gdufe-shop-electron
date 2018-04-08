@@ -44,7 +44,6 @@ export const asyncRouterMap = [
       roles: ['stocker']
     },
     children: [
-      { path: 'storage', component: _import('stock/storage/index'), name: 'storage', meta: { title: 'storage', noCache: true,icon:'storage' }},
       { path: 'catalog', component: _import('stock/catalog/index'), name: 'catalog', meta: { title: 'catalogStock', noCache: true,icon:'catalog' }},
     ],
   },
@@ -62,22 +61,6 @@ export const asyncRouterMap = [
       { path: 'addAccount', component: _import('account/addAccount/index'), name: 'addAccount', meta: { title: 'addAccount', noCache: true,icon:'addAccount' }},
       { path: 'catalogAccount', component: _import('account/catalog/index'), name: 'catalogAccount', meta: { title: 'catalogAccount', noCache: true, icon:'catalog' }},
     ],
-  },
-  {
-    path: '/sale',
-    component: Layout,
-    redirect: '/sale/index',
-    meta: { roles: ['saler'] }, // you can set roles in root nav    
-    children: [{
-      path: 'index',
-      component: _import('sale/index'),
-      name: 'sale',
-      meta: {
-        title: 'sale',
-        icon: 'sale',
-        noCache: false,
-      }
-    }],
   },
   {
     path: '/addGood',

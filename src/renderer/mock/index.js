@@ -7,6 +7,7 @@ import accountAPI from './account'
 import purchaseAPI from './purchaseList'
 import goodAPI from './good'
 import stockAPI from './stock'
+import statisticsAPI from './statistics'
 
 // Mock.setup({
 //   timeout: '350-600'
@@ -46,6 +47,9 @@ Mock.mock(/\/admin\/good\/info/, 'post', goodAPI.addGoodInfo)
 
 
 Mock.mock(/\/admin\/stock\/list/, 'get', stockAPI.fetchStockList)
+
+
+Mock.mock(/\/admin\/statistics\/sale/, 'get', statisticsAPI.getSale)
 }
 
 export default Mock

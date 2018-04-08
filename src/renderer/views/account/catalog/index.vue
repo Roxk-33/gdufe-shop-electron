@@ -85,8 +85,8 @@
 <script>
 import { getAccountList, editAccount, delAccount } from '@/api/account'
 export default {
-  name: "accountMenu",
-  data() {
+    name: "accountMenu",
+    data() {
         var checkTel = (rule, value, callback) => {
             if (!value) {
                 return callback(new Error('电话不能为空'));
@@ -94,7 +94,7 @@ export default {
             setTimeout(() => {
                 if (!Number.isInteger(value)) {
                     callback(new Error('请输入数字值'));
-                }else {
+                } else {
                     if (!validateTel(value)) {
                         callback(new Error('请输入电话号码'));
                     } else {
@@ -109,9 +109,9 @@ export default {
             if (value === '') {
                 callback(new Error('请输入密码'));
             } else {
-            if (this.account.checkPass !== '') {
-                this.$refs.account.validateField('checkPass');
-            }
+                if (this.account.checkPass !== '') {
+                    this.$refs.account.validateField('checkPass');
+                }
                 callback();
             }
         };
@@ -124,57 +124,56 @@ export default {
                 callback();
             }
         };
-    return {
-        works : [
-                {
-                    label:'前台销售人员',
-                    value:'saler'
+        return {
+            works: [{
+                    label: '前台销售人员',
+                    value: 'saler'
                 },
                 {
-                    label:'库存管理人员',
-                    value:'stocker'
+                    label: '库存管理人员',
+                    value: 'stocker'
                 },
                 {
-                    label:'会计',
-                    value:'accountant'
+                    label: '会计',
+                    value: 'accountant'
                 },
-        ],
-        AccountList : [],
-        listLoading : true,
-        account:{},
-        workerDialogVisible : false,
-        rules: {
-            tel:  { validator: checkTel, trigger: 'blur' },
-            account: [{ required: true, message: '请输入账户', trigger: 'blur' }],
-            name: [{ required: true, message: '请输入员工姓名', trigger: 'blur' }],
-            password: [{ validator: validatePass,  trigger: 'blur' }],
-            checkPass: [{ validator: checkPass, trigger: 'blur' }],
-        },
-        currentPage:1,
-        size:20,
-        total_page : 100,
-    };
-  },
-  methods: {
-    DelAccount(id){
-        delAccount({id}).then( data =>{
-           
-            this.workerDialogVisible = false;
-            this.$message({
-                message: data.message,
-                type: "success"
-            });
-            this.fetchAccount();
-        }).catch((message) => {
-            this.$message.error(message);
-        })
+            ],
+            AccountList: [],
+            listLoading: true,
+            account: {},
+            workerDialogVisible: false,
+            rules: {
+                tel: { validator: checkTel, trigger: 'blur' },
+                account: [{ required: true, message: '请输入账户', trigger: 'blur' }],
+                name: [{ required: true, message: '请输入员工姓名', trigger: 'blur' }],
+                password: [{ validator: validatePass, trigger: 'blur' }],
+                checkPass: [{ validator: checkPass, trigger: 'blur' }],
+            },
+            currentPage: 1,
+            size: 20,
+            total_page: 100,
+        };
     },
-    fetchAccount(){
+    methods: {
+        DelAccount(id) {
+            delAccount({ id }).then(data => {
+
+                this.workerDialogVisible = false;
+                this.$message({
+                    message: data.message,
+                    type: "success"
+                });
+                this.fetchAccount();
+            }).catch((message) => {
+                this.$message.error(message);
+            })
+        },
+        fetchAccount() {
             this.$refs["account"].validate(valid => {
-                if(valid){
+                if (valid) {
                     delete this.account.checkPass;
-                    editAccount({account:this.account}).then( data =>{
-                        
+                    editAccount({ account: this.account }).then(data => {
+
                         this.workerDialogVisible = false;
                         this.$message({
                             message: data.message,
@@ -184,23 +183,24 @@ export default {
                         this.$message.error(message);
                     })
                 }
-            })    
+            })
+        },
+        getList() {
+            getAccountList({page:this.currentPage,size:this.size}).then( data =>{
+                this.AccountList = data.info;
+                this.total_page = data.total;
+                this.listLoading = false;
+            }).catch((message) => {
+                this.$message.error(message);
+            })
+        }
     },
-    getList(){
-        getAccountList({page:this.currentPage,size:this.size}).then( data =>{
-            this.AccountList = data.info;
-            this.total_page = data.total;
-            this.listLoading = false;
-        }).catch((message) => {
-            this.$message.error(message);
-        })
-    }  
-  },
-  mounted(){
-         this.getList();
-  },
-   filters:{
-        jobs:function(job){
+    mounted() {
+        this.getList();
+    },
+
+    filters: {
+        jobs: function(job) {
             let result = '';
             switch (job) {
                 case 'saler':
@@ -210,7 +210,7 @@ export default {
                     result = '仓库管理人员'
                     break;
                 case 'accountant':
-                    result = '会计'                
+                    result = '会计'
                     break;
             }
             return result;

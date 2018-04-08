@@ -16,7 +16,7 @@ export function cleanCart(data) {
 }
 export function addVip(data) {
   return request({
-    url: '/font/vip/add',
+    url: '/front/vip/add',
     method: 'post',
     data
   })

@@ -14,3 +14,9 @@ export function fetchStockList(params) {
     params
   })
 }
+export function fetchGoodType() {
+  return request({
+    url: '/admin/stock/type',
+    method: 'get',
+  })
+}

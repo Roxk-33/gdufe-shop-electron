@@ -4,12 +4,13 @@ import Mock from 'mockjs'
 export default {
     fetchStockList: () => {
         let data = Mock.mock({
-            'info|4-10':[
+            'goods|4-10':[
                 {
-                    goodNo: '@id',
-                    goodName: '@cname',
-                    'goodStock|1-100': 100,
+                    good_id: '@id',
+                    good_name: '@cname',
+                    'good_stock|1-100': 100,
                     status: true,
+                    good_divide:'@cname'
                 },
             ],
             'total|1-100':100,            
@@ -18,3 +19,4 @@ export default {
         return data
     }
 }
+

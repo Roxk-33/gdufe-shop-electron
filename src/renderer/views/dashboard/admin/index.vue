@@ -42,10 +42,12 @@ import PieChart from './components/PieChart'
 import BarChart from './components/BarChart'
 import BoxCard from './components/BoxCard'
 
+import { getSale, getGood} from '@/api/statistics'
+
 const lineChartData = {
   newVisitis: {
-    expectedData: [100, 120, 161, 134, 105, 160, 165],
-    actualData: [120, 82, 91, 154, 162, 140, 145]
+    expectedData: [100, 120, 161, 134, 105, 160],
+    actualData: [120, 82, 91, 154, 162, 140]
   },
   messages: {
     expectedData: [200, 192, 120, 144, 160, 130, 140],
@@ -58,6 +60,9 @@ const lineChartData = {
   shoppings: {
     expectedData: [130, 140, 141, 142, 145, 150, 160],
     actualData: [120, 82, 91, 154, 162, 140, 130]
+  },
+  sale:{
+    
   }
 }
 
@@ -73,13 +78,22 @@ export default {
   },
   data() {
     return {
-      lineChartData: lineChartData.newVisitis
+      lineChartData: lineChartData.newVisitis,
+      chartData : {},
+      sql:''
     }
   },
   methods: {
     handleSetLineChartData(type) {
       this.lineChartData = lineChartData[type]
-    }
+    },
+    
+  },
+  created(){
+    getSale().then( data =>{
+        this.chartData = data.result;
+
+    })
   }
 }
 </script>

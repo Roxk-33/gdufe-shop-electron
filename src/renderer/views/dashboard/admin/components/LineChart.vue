@@ -72,6 +72,9 @@ export default {
     }
   },
   methods: {
+    getDate(){
+      let date = new Date();
+    },
     setOptions({ expectedData, actualData } = {}) {
       this.chart.setOption({
         xAxis: {
