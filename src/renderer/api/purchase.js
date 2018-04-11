@@ -17,7 +17,7 @@ export function fetchListDetail(params) {
 }
 export function delList(params) {
   return request({
-    url: '/admin/purchase/del',
+    url: '/admin/purchase/delete',
     method: 'get',
     params
   })

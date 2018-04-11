@@ -1,12 +1,15 @@
 <template>
-<div>
+<div class='shop-container'>
 
-
+  <p class='shop-title'>采购列表</p>
   <el-table :data="list" border fit highlight-current-row style="width: 100%">
 
-    <el-table-column align="center" label="序号"   v-loading="loading" prop="no"></el-table-column>
-
-    <el-table-column  align="center" label="发布时间" prop="time"></el-table-column>
+    <el-table-column type="index" width="50" label="序号"></el-table-column>
+    <el-table-column  align="center" label="发布时间">
+      <template slot-scope="scope">
+        {{scope.row.create_time | TimeConversion}}
+      </template>
+    </el-table-column>
 
     <el-table-column  align="center" label="重要性">
       <template slot-scope="scope">
@@ -16,12 +19,12 @@
 
     <el-table-column align="center" class-name="status-col" label="状态" >
       <template slot-scope="scope">
-        <el-tag :type="scope.row.status | statusFilter_1">{{scope.row.status == 0 ? '未完成':'已完成'}}</el-tag>
+        <el-tag :type="scope.row.purchase_status | statusFilter_1">{{scope.row.purchase_status == 0 ? '未完成':'已完成'}}</el-tag>
       </template>
     </el-table-column>
     <el-table-column align="center" class-name="status-col" label="操作" >
       <template slot-scope="scope">
-          <el-button type="primary"  @click="getOrderDetail(scope.row.no)" :disabled="scope.row.status == 1">采购</el-button>
+          <el-button type="primary"  @click="getOrderDetail(scope.row.purchase_id)" :disabled="scope.row.purchase_status == 1">采购</el-button>
       </template>
     </el-table-column>
 
@@ -38,19 +41,18 @@
   <el-dialog title="采购清单详情" :visible.sync="orderDialogVisible" width="1200px" >
       <div>
            <el-table :data="orderDetail" border fit highlight-current-row style="width: 100%">
-              <el-table-column align="center" label="序号"   v-loading="loading" type="index" width='100'></el-table-column>
-              <el-table-column align="center" label="编号" prop="goodNo"></el-table-column>
-              <el-table-column align="center" label="名称" prop="goodName"></el-table-column>
-              <el-table-column align="center" class-name="status-col" label="采购数量" prop="purchaseNum"> </el-table-column>
+              <el-table-column align="center" label="序号"    type="index" width='100'></el-table-column>
+              <el-table-column align="center" label="名称" prop="good_name"></el-table-column>
+              <el-table-column align="center" class-name="status-col" label="采购数量" prop="purchase_number"> </el-table-column>
               <el-table-column align="center" class-name="status-col" label="状态">
                 <template slot-scope="scope">
-                    <el-tag :type="scope.row.purchaseStatus | statusFilter_2">{{scope.row.purchaseStatus | purchaseFilter}}</el-tag>
+                    <el-tag :type="scope.row.purchase_status | statusFilter_2">{{scope.row.purchase_status | purchaseFilter}}</el-tag>
                 </template>
               </el-table-column>
               <el-table-column align="center" class-name="status-col" label="操作" >
                 <template slot-scope="scope">
-                    <el-button type="primary" @click="changeGoodStatus(scope.$index,1)" :disabled="scope.row.purchaseStatus == 1">已采购</el-button>
-                    <el-button type="danger" @click="changeGoodStatus(scope.$index,2)" :disabled="scope.row.purchaseStatus == 2">缺货</el-button>
+                    <el-button type="primary" @click="changeGoodStatus(scope.$index,1)" :disabled="scope.row.purchase_status == 1">已采购</el-button>
+                    <el-button type="danger" @click="changeGoodStatus(scope.$index,2)" :disabled="scope.row.purchase_status == 2">缺货</el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -68,14 +70,10 @@
 import { fetchList ,fetchListDetail, updateList} from '@/api/purchase'
 
 export default {
-  props: {
-    type: {
-      type: String,
-      default: 'all'
-    }
-  },
+  
   data() {
     return {
+      type : 'not',
       orderDialogVisible: false,
       list: null,
       orderDetail : null,
@@ -100,6 +98,10 @@ export default {
       status = parseInt(status);
       const statusMap = ['未采购','已采购','缺货'];
       return statusMap[status]
+    },
+    TimeConversion(time){
+      const date = new Date(time *1000);
+      return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`
     }
   },
   created() {
@@ -108,28 +110,28 @@ export default {
   methods: {
     getList() {
       this.loading = true
-      this.$emit('create') // for test
-      fetchList({page:this.currentPage,size:this.size}).then( data => {
+      fetchList({page:this.currentPage,size:this.size,type:'not'}).then( data => {
         this.list = data.info;
         this.total_page = data.total;        
         this.loading = false;
       })
     },
-    getOrderDetail(no){
-      fetchListDetail({no}).then( data =>{
+    getOrderDetail(id){
+      fetchListDetail({id}).then( data =>{
           this.orderDialogVisible = true;
           this.orderDetail = data.info;
       })
     },
     changeGoodStatus(index,status){
-      this.orderDetail[index].purchaseStatus = status;
+      this.orderDetail[index].purchase_status = status;
     },
     sumbitOrder(){
-      console.log(this.orderDetail);
+      
       updateList({list : this.orderDetail}).then( data =>{
         if (data.status) {
           this.orderDialogVisible = false;
           this.orderDetail = null;
+          this.getList();
         }else {
           this.orderDialogVisible = false;
           this.orderDetail = null;
@@ -140,6 +142,10 @@ export default {
 }
 </script>
 <style scoped>
+.purchase-container{
+    margin: 30px;
+  
+}
 .pagination{
     float: right;
   }

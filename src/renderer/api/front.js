@@ -1,12 +1,6 @@
 import request from '@/utils/request'
 
-export function addGood(params) {
-  return request({
-    url: '/front/good/in',
-    method: 'get',
-    params
-  })
-}
+
 export function cleanCart(data) {
   return request({
     url: '/front/good/clean',
@@ -28,3 +22,4 @@ export function checkVip(params) {
     params
   })
 }
+

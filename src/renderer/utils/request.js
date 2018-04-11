@@ -22,25 +22,30 @@ service.interceptors.request.use(config => {
   Promise.reject(error)
 })
 
+
 // respone interceptor
 service.interceptors.response.use(
   response => {
       const res = response.data;
-      if (!JSON.parse(res.status)) {
+     
+      if (!res.status) {
         Message({
           message: res.message,
           type: 'error',
           duration: 5 * 1000
         });
-        if (res.code === 1009 || res.code === 1007 || res.code === 4001) {
-          MessageBox.confirm('你已被登出，可以取消继续留在该页面，或者重新登录', '确定登出', {
-            confirmButtonText: '重新登录',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }).then(() => {
+        console.log(res.code);
+        if (res.code == 1009 || res.code == 1007 || res.code == 4001) {
+
+
+          // MessageBox.confirm('你已被登出，可以取消继续留在该页面，或者重新登录', '确定登出', {
+          //   confirmButtonText: '重新登录',
+          //   cancelButtonText: '取消',
+          //   type: 'warning'
+          // }).then(() => {
             store.dispatch('FedLogOut').then(() => {
               location.reload();// 为了重新实例化vue-router对象 避免bug
-            });
+            // });
           })
         }else if(res.code === 1003){
           store.dispatch('FedLogOut').then(() => {

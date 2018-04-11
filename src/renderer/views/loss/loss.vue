@@ -1,17 +1,24 @@
 <template>
 <div class="shop-container ">
     <div>
-        <p class='shop-title'>添加商品</p>
+        <p class='shop-title'>添加损耗商品</p>
         <el-form  :model="postForm"  ref="postForm" :rules="rules" label-width="100px">
         <el-form-item label="商品编号" prop="goodNo">
-            <el-autocomplete style="width:200px" v-model.number="postForm.goodNo" value-key='goodName' placeholder="商品编号"  required :fetch-suggestions="querySearchAsync" @select="handleSelect">
+            <el-autocomplete style="width:300px" v-model.number="postForm.lossNo" value-key='goodName' placeholder="商品编号"  required :fetch-suggestions="querySearchAsync" @select="handleSelect">
                <template slot-scope="props">
-                  <div class="name">商品名：{{ props.item.goodName }}</div>
+                  <div class="name">商品名：{{ props.item.good_name }}</div>
                 </template>
             </el-autocomplete>
         </el-form-item>
-        <el-form-item label="购买数量" prop="purchaseNum">
-            <el-input-number v-model="postForm.purchaseNum" :min="1"  label="购买数量"></el-input-number>
+        <el-form-item label="损耗类型" prop="lossCase">
+            <el-select v-model="postForm.lossCase">
+                <el-option value="0">变质</el-option>
+                <el-option value="1">损坏</el-option>
+                <el-option value="2">过期</el-option>
+            </el-select>
+        </el-form-item>
+        <el-form-item label="损耗数量" prop="lossNum">
+            <el-input-number v-model="postForm.lossNum" :min="1"  label="购买数量"></el-input-number>
         </el-form-item>
         <el-form-item >
             <el-button type="primary" @click="pushGood()" style="width:150px;" v-loading="loading">添加</el-button>
@@ -19,7 +26,7 @@
         </el-form>
     </div>
     <div>
-        <p class='shop-title'>商品列表</p>
+        <p class='shop-title'>损耗商品列表</p>
         <el-table border :data="goodList" v-loading="listLoading"  class='goodsList'>
             <el-table-column align='center' type="index" label="序号" width="70">
             </el-table-column>
@@ -27,7 +34,12 @@
             </el-table-column>
             <el-table-column align='center' prop="goodName" label="商品名" width="200" >
             </el-table-column>
-            <el-table-column align='center' prop="purchaseNum" label="数量" width="200">
+            <el-table-column align='center' prop="lossNum" label="数量" width="200">
+            </el-table-column>
+            <el-table-column align='center' prop="lossCase" label="损耗类型" width="200">
+               <template slot-scope="scope">
+                    {{scope.row.lossCase | statusFilter}}
+                </template>
             </el-table-column>
             <el-table-column align='center' label="操作">
               <template slot-scope="scope">
@@ -35,18 +47,6 @@
               </template>
             </el-table-column>
         </el-table>
-        <div class='order-box'>
-          <div class='order-box_note'>
-            
-            <label>清单备注：</label>
-            <el-input v-model="note"></el-input>
-          </div>
-          <div class='order-box_importance'>
-            <label>清单重要性：</label>
-            
-            <el-rate v-model="importance" :colors="['#99A9BF', '#E6A23C', '#F56C6C']" :low-threshold='2' :high-threshold='4' style='margin-top: 8px;'></el-rate>       
-          </div>
-        </div>
         <div class='btn-box'>
           <el-button type="success" @click="postList"  >提交</el-button>
           <el-button type="danger" @click="Empty" :disabled="isEmpty">清空</el-button>
@@ -57,13 +57,12 @@
 </template>
 
 <script>
-import { addList} from "@/api/purchase";
-import { fetchGood } from "@/api/good";
-import { validateTel } from '@/utils/validate.js'
+import { addLossList } from "@/api/stock";
+import { fetchAjaxGood } from "@/api/good";
 
 const defaultForm = {
   goodNo: "",
-  purchaseNum: 0
+  lossNum: 0
 };
 export default {
   name: "postList",
@@ -98,7 +97,7 @@ export default {
             trigger: "change"
           }
         ],
-        purchaseNum: [
+        lossNum: [
           {
             type: "number",
             required: true,
@@ -112,20 +111,26 @@ export default {
   methods: {
     
     querySearchAsync(query, cb) {
-       fetchGood({target : query}).then( data =>{
-           cb(res.data.info);
+       if(query === '' || query === undefined){
+         cb();
+         
+      }else{
+        fetchAjaxGood({target : query}).then( data =>{
+           if(data.status){
+            cb(data.info);
+          }
        })
+      }
     },
     handleSelect(item) {
-        console.log(item);
-        this.postForm.goodNo = item.goodNo;
+        this.postForm.goodNo = parseInt(item.good_id);
     },
 
     pushGood() {
       this.$refs["postForm"].validate(valid => {
         if (valid) {
 
-          fetchGood({goodNo : this.postForm.goodNo}).then(data => {
+          fetchAjaxGood({goodNo : this.postForm.goodNo}).then(data => {
               this.postForm.goodName = data.info.goodName;
               this.goodList.push(this.postForm);
               this.postForm = Object.assign({}, defaultForm);
@@ -139,17 +144,14 @@ export default {
       });
     },
     postList() {
-      let data = {
-        goods : this.goodList,
-        importance: this.importance,
-        note : this.note
-      }
-      addList(data).then( data =>{
-        
+      
+      addLossList({goods : this.goodList}).then( data =>{
+          
           this.$message({
               message: "添加成功",
               type: "success"
           });
+          this.goodList = [];
        
       })
     },
@@ -164,6 +166,12 @@ export default {
     isEmpty(){
       return this.goodList.length == 0
     }
+  },
+  filter :{
+        statusFilter(status){
+            const arr = ['变质','损坏','过期'];
+            return arr[status];
+        }
   }
 };
 </script>

@@ -1,17 +1,6 @@
 <template>
   <el-row class="panel-group" :gutter="40">
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-      <div class='card-panel' @click="handleSetLineChartData('newVisitis')">
-        <div class="card-panel-icon-wrapper icon-people">
-          <svg-icon name="peoples" class="card-panel-icon" scale="6"/>
-        </div>
-        <div class="card-panel-description">
-          <div class="card-panel-text">New Visits</div>
-          <count-to class="card-panel-num" :startVal="0" :endVal="102400" :duration="3600"></count-to>
-        </div>
-      </div>
-    </el-col>
-    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel" @click="handleSetLineChartData('shoppings')">
         <div class="card-panel-icon-wrapper icon-shoppingCard">
           <svg-icon name="shoppingCard" class="card-panel-icon" scale="6"/>

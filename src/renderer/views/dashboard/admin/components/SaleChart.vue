@@ -6,12 +6,18 @@
 import echarts from 'echarts'
 require('echarts/theme/macarons') // echarts 主题
 import { debounce } from '@/utils'
+import resize from './mixins/resize'
 
 export default {
+  mixins: [resize],  
   props: {
     className: {
       type: String,
       default: 'chart'
+    },
+    timeSpan: {
+      type: Number,
+      default: 7
     },
     width: {
       type: String,
@@ -36,30 +42,11 @@ export default {
   },
   mounted() {
     this.initChart()
-    if (this.autoResize) {
-      this.__resizeHanlder = debounce(() => {
-        if (this.chart) {
-          this.chart.resize()
-        }
-      }, 100)
-      window.addEventListener('resize', this.__resizeHanlder)
-    }
-
-    // 监听侧边栏的变化
-    const sidebarElm = document.getElementsByClassName('sidebar-container')[0]
-    sidebarElm.addEventListener('transitionend', this.__resizeHanlder)
   },
   beforeDestroy() {
     if (!this.chart) {
       return
     }
-    if (this.autoResize) {
-      window.removeEventListener('resize', this.__resizeHanlder)
-    }
-
-    const sidebarElm = document.getElementsByClassName('sidebar-container')[0]
-    sidebarElm.removeEventListener('transitionend', this.__resizeHanlder)
-
     this.chart.dispose()
     this.chart = null
   },
@@ -69,26 +56,46 @@ export default {
       handler(val) {
         this.setOptions(val)
       }
+    },
+    timeSpan:{
+      deep: true,
+      handler(val) {
+        this.setOptions(this.chartData)
+      }
     }
+  },
+  created(){
+    this.getDate();
   },
   methods: {
     getDate(){
-      let date = new Date();
+      let date_arr = [];
+      for (let i = 0; i < this.timeSpan; i++) {
+        let my_date = new Date();
+        my_date.setDate(my_date.getDate() - i);
+        date_arr.push(`${my_date.getFullYear()}/${my_date.getMonth() + 1}/${my_date.getDate()}`);
+        
+      }
+      date_arr = date_arr.reverse()
+      return date_arr;
+      
     },
     setOptions({ expectedData, actualData } = {}) {
       this.chart.setOption({
+        title: {
+          text: '超市销售情况',
+        },
         xAxis: {
-          data: ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日'],
+          data: this.getDate(),
           boundaryGap: false,
-          axisTick: {
-            show: false
-          }
+          type: 'category',
+           
         },
         grid: {
-          left: 10,
-          right: 10,
-          bottom: 20,
-          top: 30,
+          left: 50,
+          right: 50,
+          bottom: 30,
+          top: 50,
           containLabel: true
         },
         tooltip: {
@@ -104,10 +111,10 @@ export default {
           }
         },
         legend: {
-          data: ['expected', 'actual']
+          data: ['营销额']
         },
         series: [{
-          name: 'expected', itemStyle: {
+          name: '营销额', itemStyle: {
             normal: {
               color: '#FF005A',
               lineStyle: {
@@ -121,26 +128,6 @@ export default {
           data: expectedData,
           animationDuration: 2800,
           animationEasing: 'cubicInOut'
-        },
-        {
-          name: 'actual',
-          smooth: true,
-          type: 'line',
-          itemStyle: {
-            normal: {
-              color: '#3888fa',
-              lineStyle: {
-                color: '#3888fa',
-                width: 2
-              },
-              areaStyle: {
-                color: '#f3f8ff'
-              }
-            }
-          },
-          data: actualData,
-          animationDuration: 2800,
-          animationEasing: 'quadraticOut'
         }]
       })
     },

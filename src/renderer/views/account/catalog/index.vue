@@ -5,6 +5,8 @@
         <router-link to="/account/addAccount" >
             <el-button icon='el-icon-plus' type="primary" round style='margin:20px 10px;'>添加账户</el-button>
         </router-link>
+  <el-button icon='el-icon-refresh' @click="getList" style="margin:5px" type='success '></el-button>
+        
         <el-table border :data="AccountList" v-loading="listLoading"  class='goodsList'>
             <el-table-column align='center' type="index" label="序号" width="70">
             </el-table-column>
@@ -27,7 +29,7 @@
             <el-table-column align='center' label="操作" width="200">
               <template slot-scope="scope">
                  <el-button type="primary"  icon='el-icon-edit' @click="workerDialogVisible = true;account = scope.row" ></el-button>
-                 <el-button type="danger"  icon='el-icon-delete' @click="DelAccount(scope.row.id)"></el-button>
+                 <el-button type="danger"  icon='el-icon-delete' @click="DelAccount(scope.row.no)"></el-button>
               </template>
             </el-table-column>
         </el-table>
@@ -46,7 +48,6 @@
                     <el-form-item label="职工姓名：" prop="name">
                         <el-input v-model="account.name"  readonly=""></el-input>                        
                     </el-form-item>
-                   
                     <el-form-item label="职工电话：" prop="tel">
                         <el-input v-model.number="account.tel" placeholder="电话" required></el-input>
                     </el-form-item>
@@ -160,10 +161,10 @@ export default {
 
                 this.workerDialogVisible = false;
                 this.$message({
-                    message: data.message,
+                    message: '删除成功',
                     type: "success"
                 });
-                this.fetchAccount();
+                this.getList();
             }).catch((message) => {
                 this.$message.error(message);
             })
@@ -176,9 +177,11 @@ export default {
 
                         this.workerDialogVisible = false;
                         this.$message({
-                            message: data.message,
+                            message: '修改成功',
                             type: "success"
                         });
+                        this.getList();
+                        
                     }).catch((message) => {
                         this.$message.error(message);
                     })
@@ -186,6 +189,7 @@ export default {
             })
         },
         getList() {
+            
             getAccountList({page:this.currentPage,size:this.size}).then( data =>{
                 this.AccountList = data.info;
                 this.total_page = data.total;
@@ -195,7 +199,7 @@ export default {
             })
         }
     },
-    mounted() {
+    created() {
         this.getList();
     },
 
@@ -211,6 +215,8 @@ export default {
                     break;
                 case 'accountant':
                     result = '会计'
+                case 'admin':
+                    result = '管理员'
                     break;
             }
             return result;

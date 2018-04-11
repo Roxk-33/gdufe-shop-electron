@@ -21,7 +21,7 @@
 </template>
 <script>
 import { validateTel } from '@/utils/validate.js'
-import { addVip } from '@/api/sale.js'
+import { addVip } from '@/api/front.js'
 export default {
     name: 'addVip',
 

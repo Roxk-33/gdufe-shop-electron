@@ -14,7 +14,7 @@
         <transition name="el-fade-in-linear">
             <el-card class="vip-card" v-show='!showVip'>
               <el-button  class='vip-card_closeBtn' type="primary" round icon="el-icon-close" @click="showVip = !showVip; vipInfo = {}"></el-button>
-              <p>会员编号：{{vipInfo.no}}</p>
+              <p>会员编号：{{vipInfo.id}}</p>
               <p>会员姓名：{{vipInfo.name}}</p>
               <p>会员电话：{{vipInfo.tel}}</p>
               <p>会员性别：{{vipInfo.sex == 1 ? '男' : '女'}}</p>
@@ -24,8 +24,12 @@
     <div>
         <p class='shop-title'>添加商品</p>
         <el-form :inline="true" :model="postForm"  ref="postForm" :rules="rules" class="demo-form-inline">
-        <el-form-item label="商品编号" prop="goodNo">
-            <el-input v-model.number="postForm.goodNo" placeholder="商品编号" required></el-input>
+        <el-form-item label="商品编号" prop="goodId">
+            <el-autocomplete  style="width:300px" v-model.number="postForm.goodId" value-key='goodName' placeholder="商品编号"  required :fetch-suggestions="querySearchAsync" @select="handleSelect">
+               <template slot-scope="props" >
+                  <div class="name">商品名：{{ props.item.good_name }}</div>
+                </template>
+            </el-autocomplete>
         </el-form-item>
         <el-form-item label="购买数量" prop="goodNum">
             <el-input-number v-model="postForm.goodNum" :min="1"  label="购买数量"></el-input-number>
@@ -40,7 +44,7 @@
         <el-table border :data="cartList" v-loading="listLoading"  class='goodsList'>
             <el-table-column align='center' type="index" label="序号" width="70">
             </el-table-column>
-            <el-table-column align='center' prop="good_no" label="商品编号" width="200" filter-placement="bottom-end" >
+            <el-table-column align='center' prop="good_id" label="商品编号" width="200" filter-placement="bottom-end" >
             </el-table-column>
             <el-table-column align='center' prop="good_name" label="商品名" width="200" >
             </el-table-column>
@@ -85,11 +89,12 @@
 </template>
 
 <script>
-import { cleanCart, addGood, checkVip} from "@/api/sale";
+import { cleanCart,  checkVip} from "@/api/front";
 import { validateTel } from '@/utils/validate.js'
+import { fetchAjaxGood,fetchGood } from "@/api/good";
 
 const defaultForm = {
-  goodNo: "",
+  goodId: "",
   goodNum: 0
 };
 export default {
@@ -120,7 +125,7 @@ export default {
       vipNo:'',
       searchType : '1',
       rules: {
-        goodNo: [
+        goodId: [
           {
             type: "number",
             required: true,
@@ -140,13 +145,32 @@ export default {
     };
   },
   methods: {
+
+    querySearchAsync(query, cb) {
+      if(query === ''|| query === undefined){
+         cb();
+         
+      }else{
+        fetchAjaxGood({target : query}).then( data =>{
+           if(data.status){
+            cb(data.info);
+          }
+       })
+      }
+       
+    },
+    handleSelect(item) {
+    
+        this.postForm.goodId = parseInt(item.good_id);
+    },
+
     pushCart() {
       this.$refs["postForm"].validate(valid => {
         if (valid) {
           this.loading = true;
-          addGood(this.postForm)
+          fetchGood(this.postForm)
             .then(data => {
-              const { status, info } = data;
+              const {  info } = data;
                 this.loading = false;
                 info.good_total = 0;
                 info.good_total = parseFloat((parseInt(this.postForm.goodNum) * parseFloat(info.good_price)).toFixed(1));
@@ -154,7 +178,6 @@ export default {
             })
             .catch(err => {
               this.loading = false;
-              this.$message({ message: err, type: "error" });
             });
         } else {
         }
@@ -163,6 +186,11 @@ export default {
     Clearing() {
       cleanCart({order:this.cartList,userId:this.vipInfo.userId,pay:this.pay}).then( data =>{
         
+        this.$notify({
+          title: '成功',
+          message: '结算成功',
+          type: 'success'
+        });
         this.cartList = [];
         this.vipInfo = {};
         this.showVip = true;
@@ -191,10 +219,15 @@ export default {
         });
         return;
       }
-      checkVip({no:this.vipNo}).then(data => {
+      checkVip({target:this.vipNo, searchType:this.searchType}).then(data => {
           this.showVip = !this.showVip;
-          this.vipInfo = res.data.info
+          this.vipInfo = data.info
       })
+    }
+  },
+  watch:{
+    searchType(){
+      this.vipNo = '';
     }
   },
   computed:{

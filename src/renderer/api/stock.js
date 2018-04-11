@@ -1,22 +1,41 @@
 import request from '@/utils/request'
 
-export function goodINstock(data) {
-  return request({
-    url: '/stock/in',
-    method: 'post',
-    data
-  })
-}
+
 export function fetchStockList(params) {
   return request({
-    url: '/admin/stock/list',
+    url:'/stock/inventory/list',
     method: 'get',
     params
   })
 }
 export function fetchGoodType() {
   return request({
-    url: '/admin/stock/type',
+    url: '/stock/inventory/type',
     method: 'get',
+  })
+}
+
+//损耗API
+
+export function addLossList(data) {
+  return request({
+    url: '/stock/loss/add',
+    method: 'post',
+    data
+  })
+}
+
+export function getLossList(params) {
+  return request({
+    url: '/stock/loss/list',
+    method: 'get',
+    params
+  })
+}
+export function getLossDetail(params) {
+  return request({
+    url: '/stock/loss/detail',
+    method: 'get',
+    params
   })
 }

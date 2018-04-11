@@ -120,6 +120,14 @@ export default {
                             message: data.message,
                             type: "success"
                         });
+                        this.postForm = {
+                                    name: '',
+                                    sex: 0,
+                                    tel: '',
+                                    job:'',
+                                    password : '',
+                                    checkPass : ''
+                                }
                         this.$router.push({path: "/account/catalogAccount"});
                     }).catch((message) => {
                         this.$message.error(message);

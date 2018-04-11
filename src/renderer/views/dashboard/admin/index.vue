@@ -4,50 +4,55 @@
     <panel-group @handleSetLineChartData="handleSetLineChartData"></panel-group>
 
     <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
-      <line-chart :chart-data="lineChartData"></line-chart>
+
+      <div class="box-card">
+        时间范围：<el-cascader
+          :options="timeSpanOption"
+          :show-all-levels="false"
+          @change = 'handleSaleTimeSpan'
+          placeholder="过往七天"
+      ></el-cascader>
+      </div>
+      
+      <sale-chart :chart-data="saleChartData" :time-span='saleTimeSpan'></sale-chart>
+    </el-row>
+    <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
+      <div class="box-card">
+        时间范围：<el-cascader
+          :options="timeSpanOption"
+          :show-all-levels="false"
+          @change = 'handleGoodTimeSpan'
+          placeholder="过往七天"
+          
+      ></el-cascader>
+      </div>
+      
+
+      <good-chart :chart-data="goodChartData"></good-chart>
     </el-row>
 
-    <el-row :gutter="32">
-      <el-col :xs="24" :sm="24" :lg="8">
-        <div class="chart-wrapper">
-          <raddar-chart></raddar-chart>
-        </div>
-      </el-col>
-      <el-col :xs="24" :sm="24" :lg="8">
-        <div class="chart-wrapper">
-          <pie-chart></pie-chart>
-        </div>
-      </el-col>
-      <el-col :xs="24" :sm="24" :lg="8">
-        <div class="chart-wrapper">
-          <bar-chart></bar-chart>
-        </div>
-      </el-col>
-    </el-row>
-    
-    <el-row :gutter="8">
-      <!-- <el-col :xs="{span: 12}" :sm="{span: 12}" :md="{span: 12}" :lg="{span: 6}" :xl="{span: 5}">
+
+    <!-- <el-row :gutter="8">
+      <el-col :xs="{span: 12}" :sm="{span: 12}" :md="{span: 12}" :lg="{span: 6}" :xl="{span: 5}">
         <box-card></box-card>
-      </el-col> -->
-    </el-row>
+      </el-col>
+    </el-row> -->
 
   </div>
 </template>
 
 <script>
 import PanelGroup from './components/PanelGroup'
-import LineChart from './components/LineChart'
-import RaddarChart from './components/RaddarChart'
-import PieChart from './components/PieChart'
-import BarChart from './components/BarChart'
+import SaleChart from './components/SaleChart'
+import GoodChart from './components/GoodChart'
 import BoxCard from './components/BoxCard'
 
 import { getSale, getGood} from '@/api/statistics'
 
 const lineChartData = {
   newVisitis: {
-    expectedData: [100, 120, 161, 134, 105, 160],
-    actualData: [120, 82, 91, 154, 162, 140]
+    expectedData: [100, 120, 161, 134, 105, 160, 170],
+    actualData: [120, 82, 91, 154, 162, 140, 170]
   },
   messages: {
     expectedData: [200, 192, 120, 144, 160, 130, 140],
@@ -63,38 +68,81 @@ const lineChartData = {
   },
   sale:{
     
-  }
+  },
 }
 
 export default {
   name: 'dashboard-admin',
   components: {
     PanelGroup,
-    LineChart,
-    RaddarChart,
-    PieChart,
-    BarChart,
+    GoodChart,
+    SaleChart,
     BoxCard,
   },
   data() {
     return {
-      lineChartData: lineChartData.newVisitis,
+      saleChartData: { 
+          expectedData: [100, 120, 161, 134, 105, 160, 170],
+          actualData: [120, 82, 91, 154, 162, 140, 170]
+      },
+      goodChartData: { 
+          expectedData: [100, 120, 161, 134, 105, 160, 170],
+          actualData: [120, 82, 91, 154, 162, 140, 170]
+      },
       chartData : {},
-      sql:''
+      sql:'',
+      saleTimeSpan : 7,
+      goodTimeSpan : 7,
+      
+      timeSpanOption : [
+        {
+          value: 'day',
+          label: '天数',
+          children: [{
+            value: 7,
+            label: '过往七天',
+            },
+            {
+            value: 14,
+            label: '过往十四天',
+            }
+          ]
+        },
+        {
+          value: 'week',
+          label: '周数',
+          children: [{
+            value: 4,
+            label: '过往四周',
+            },
+            {
+              value: 8,
+              label: '过往八周',
+            }
+          ]
+        }]
     }
   },
   methods: {
     handleSetLineChartData(type) {
       this.lineChartData = lineChartData[type]
     },
-    
+    handleSaleTimeSpan(saleTimeSpan){
+      this.saleTimeSpan = saleTimeSpan[1]
+      this.saleChartData = {
+            expectedData: [100, 120, 161, 134, 105, 160, 170,100, 120, 161, 134, 105, 160, 170],
+            actualData: [120, 82, 91, 154, 162, 140, 170,100, 120, 161, 134, 105, 160, 170]
+        }
+    },
+    handleGoodTimeSpan(saleTimeSpan){
+      console.log(this.saleTimeSpan);
+      this.goodChartData = {
+            expectedData: [100, 220, 411, 134, 1405, 160, 170],
+            actualData: [120, 82, 91, 154, 162, 140, 170]
+        }
+    },
   },
-  created(){
-    getSale().then( data =>{
-        this.chartData = data.result;
-
-    })
-  }
+ 
 }
 </script>
 
@@ -106,6 +154,11 @@ export default {
     background: #fff;
     padding: 16px 16px 0;
     margin-bottom: 32px;
+  }
+  .box-card{
+    width:25rem;
+    padding: 5 10px;
+    margin: 10px;
   }
 }
 </style>
