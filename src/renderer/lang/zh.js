@@ -5,7 +5,7 @@ export default {
     documentation: '文档',
     permission: '权限测试页',
     stock:'库存管理',
-    sale:'前台结算',
+    settleAccounts:'前台结算',
     vipAdd:'添加会员',
     storage:'商品入库',
     catalogStock:'库存目录',

@@ -98,7 +98,7 @@ const defaultForm = {
   goodNum: 0
 };
 export default {
-  name: "sale",
+  name: "settleAccounts",
   data() {
     const validateRequire = (rule, value, callback) => {
       if (value === "") {
