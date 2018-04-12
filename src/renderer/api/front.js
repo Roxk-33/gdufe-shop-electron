@@ -23,3 +23,11 @@ export function checkVip(params) {
   })
 }
 
+export function pushCart(data) {
+  return request({
+    url: '/front/cart/in',
+    method: 'post',
+    data
+  })
+}
+

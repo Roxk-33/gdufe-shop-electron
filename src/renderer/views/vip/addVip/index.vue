@@ -62,7 +62,7 @@ export default {
                 if(valid){
                     addVip(this.postForm).then( data =>{
                             this.$message({
-                                message: data.message,
+                                message: '添加成功',
                                 type: "success"
                             })
                     })

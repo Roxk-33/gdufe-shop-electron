@@ -25,6 +25,7 @@ function createWindow () {
   })
 
   mainWindow.loadURL(winURL)
+  // mainWindow.loadURL('http://lococo.site/shop.html#/')
 
   mainWindow.on('closed', () => {
     mainWindow = null

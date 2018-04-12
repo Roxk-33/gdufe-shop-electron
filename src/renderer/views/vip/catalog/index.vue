@@ -8,16 +8,28 @@
             
             <el-table-column align='center' type="index" label="序号" >
             </el-table-column>
-            <el-table-column align='center' prop="good_id" label="会员名字">
+            <el-table-column align='center' prop="user_id" label="会员编号">
             </el-table-column>
-            <el-table-column align='center' prop="good_name" label="会员电话">
+            <el-table-column align='center' prop="user_name" label="会员姓名">
             </el-table-column>
-            <el-table-column align='center' prop="good_divide" label="会员性别">
+            <el-table-column align='center' prop="user_phone" label="会员电话">
+            </el-table-column>
+            <el-table-column align='center' prop="user_integral" label="会员积分">
+            </el-table-column>
+            <el-table-column align='center' prop="user_sex" label="会员性别">
+              <template slot-scope="scope">
+                {{scope.row.user_sex == '0' ? '男' : '女'}}
+              </template>
+            </el-table-column>
+            <el-table-column align='center' prop="regist_time" label="注册时间">
+              <template slot-scope="scope">
+                {{scope.row.regist_time  | TimeConversion}}
+              </template>
             </el-table-column>
            
             <el-table-column align='center' label="操作">
                 <template slot-scope="scope">
-                    <el-button type="primary" size="medium" @click="DeleteVip(scope.row)"
+                    <el-button type="danger" size="medium" @click="DeleteVip(scope.row.user_id)"
                                icon="el-icon-delete" >删除
                     </el-button>
                 </template>
@@ -56,13 +68,13 @@
        
         getList(){
           
-          fetchVipList({page:this.currentPage,size:this.size,type:this.type}).then(data => {
-              this.vipList = data.vipList;
+          fetchVipList({page:this.currentPage,size:this.size}).then(data => {
+              this.vipList = data.info;
               this.total_page = data.total;
            
           })
         },
-        deleteVip(id){
+        DeleteVip(id){
           deleteVip({id}).then( resp=>{
             this.$message({
               message: '删除成功',
@@ -71,6 +83,15 @@
             this.getList();
           })
         }
+      },
+      filter:{
+        TimeConversion(time){
+          const date = new Date(time *1000);
+          return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`
+        }
+      },
+      created(){
+        this.getList();
       }
       
     }

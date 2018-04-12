@@ -37,8 +37,11 @@ export const asyncRouterMap = [{
         component: Layout,
         redirect: 'noredirect',
         name: 'stock',
+        meta:{
+            roles: ['stocker','manager','accountant']
+        },
         children: [
-            { path: 'catalog', component: _import('stock/catalog/index'), name: 'catalog', meta: { title: 'catalogStock', noCache: true, icon: 'catalog' , roles: ['stocker','manager','accountant']} },
+            { path: 'catalog', component: _import('stock/catalog/index'), name: 'catalog', meta: { title: 'catalogStock', noCache: true, icon: 'catalog' } },
         ],
     },
     {
@@ -46,9 +49,11 @@ export const asyncRouterMap = [{
         component: Layout,
         redirect: 'noredirect',
         name: 'settleAccounts',
-        
+        meta:{
+            roles: ['saler']
+        },
         children: [
-            { path: 'index', component: _import('settleAccounts/index'), name: 'sale', meta: { title: 'settleAccounts', noCache: true, icon: 'sale', roles: ['saler']} },
+            { path: 'index', component: _import('settleAccounts/index'), name: 'sale', meta: { title: 'settleAccounts', noCache: true, icon: 'sale'} },
         ],
     },
     {
@@ -93,8 +98,8 @@ export const asyncRouterMap = [{
             roles: ['manager']
         },
         children: [
-            { path: 'list', component: _import('purchase/index'), name: 'purchaseList', meta: { title: 'purchaseList', icon: 'purchaseList', } },
-            { path: 'adjunction', component: _import('purchase/addList/index'), name: 'addPurchase', meta: { title: 'addPurchase', icon: 'adjunction' } },
+            { path: 'list', component: _import('purchase/index'), name: 'purchaseList', meta: { title: 'purchaseList', icon: 'purchaseList', roles: ['manager']} },
+            { path: 'adjunction', component: _import('purchase/addList/index'), name: 'addPurchase', meta: { title: 'addPurchase', icon: 'adjunction',roles: ['manager'] } },
         ],
     },
 
@@ -118,14 +123,16 @@ export const asyncRouterMap = [{
         path: '/purchaseBystock',
         component: Layout,
         redirect: 'noredirect',
-        meta: { roles: ['stocker'] },
+        meta: { 
+            roles: ['stocker'],
+        },
         children: [{
             path: 'list',
             component: _import('purchase/index'),
             name: 'purchaseList',
             meta: {
                 title: 'purchaseList',
-                icon: 'purchaseList',
+                icon: 'purchaseList', 
             }
         }],
     },
@@ -134,14 +141,17 @@ export const asyncRouterMap = [{
         path: '/priceSetting',
         component: Layout,
         redirect: 'noredirect',
+        meta: {
+            
+            roles: ['manager', 'accountant']
+        },
         children: [{
             path: '',
             component: _import('priceSetting/index'),
             name: 'priceSetting',
-            meta: {
+            meta:{
                 title: 'priceSetting',
                 icon: 'priceSetting',
-                roles: ['manager', 'accountant']
             }
         }],
     },
@@ -149,6 +159,9 @@ export const asyncRouterMap = [{
         path: '/vipList',
         component: Layout,
         redirect: 'noredirect',
+        meta: {
+            roles: ['manager', 'accountant']
+        },
         children: [{
             path: '',
             component: _import('vip/catalog/index'),
@@ -156,7 +169,6 @@ export const asyncRouterMap = [{
             meta: {
                 title: 'vipList',
                 icon: 'catalog',
-                roles: ['manager', 'accountant']
             }
         }],
     },

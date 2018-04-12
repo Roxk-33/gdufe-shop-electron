@@ -4,19 +4,27 @@ import store from '@/store'
 import { getToken } from '@/utils/auth'
 // create an axios instance
 const service = axios.create({
-  baseURL: process.env.API_ROOT, // api的base_url
-  timeout: 5000 // request timeout
+  baseURL: 'http://lococo.site/proxy/MarketServer/', // api的base_url
+  // baseURL:'http://localhost:8081/MarketServer/',
+  timeout: 50000 // request timeout
 })
 
 // request interceptor
 service.interceptors.request.use(config => {
   // Do something before request is sent
+  
+  
   if (store.getters.token) {
     config.headers.Authorization = `token ${store.state.token}`;
-    config.headers['gdufe-shop'] = getToken() // 让每个请求携带token-- ['X-Token']为自定义key 请根据实际情况自行修改
+    config.headers['gdufe-shop'] = store.getters.token // 让每个请求携带token-- ['X-Token']为自定义key 请根据实际情况自行修改
   }
   return config
 }, error => {
+  Message({
+    message: error,
+    type: 'error',
+    duration: 5 * 6000
+  });
   // Do something with request error
   console.log(error) // for debug
   Promise.reject(error)
@@ -26,6 +34,7 @@ service.interceptors.request.use(config => {
 // respone interceptor
 service.interceptors.response.use(
   response => {
+    
       const res = response.data;
      
       if (!res.status) {
@@ -34,9 +43,7 @@ service.interceptors.response.use(
           type: 'error',
           duration: 5 * 1000
         });
-        console.log(res.code);
         if (res.code == 1009 || res.code == 1007 || res.code == 4001) {
-
 
           // MessageBox.confirm('你已被登出，可以取消继续留在该页面，或者重新登录', '确定登出', {
           //   confirmButtonText: '重新登录',

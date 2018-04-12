@@ -1,7 +1,7 @@
 'use strict'
 
 process.env.NODE_ENV = 'production'
-process.env.API_ROOT = 'http://47.106.107.239/MarketServer/'
+process.env.API_ROOT = 'http://localhost:8081/MarketServer/'
 
 const { say } = require('cfonts')
 const chalk = require('chalk')
@@ -23,7 +23,7 @@ const isCI = process.env.CI || false
 if (process.env.BUILD_TARGET === 'clean') clean()
 else if (process.env.BUILD_TARGET === 'web') web()
 else build()
-
+// window.__devtron = {require: nodeRequire, process: process}
 function clean () {
   del.sync(['build/*', '!build/icons', '!build/icons/icon.*'])
   console.log(`\n${doneLog}\n`)

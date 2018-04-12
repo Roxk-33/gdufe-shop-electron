@@ -1,4 +1,5 @@
 import Cookies from 'js-cookie'
+import { Notification } from 'element-ui'
 
 const TokenKey = 'Admin-Token'
 
@@ -7,6 +8,7 @@ export function getToken() {
 }
 
 export function setToken(token) {
+    
   return Cookies.set(TokenKey, token)
 }
 

@@ -5,21 +5,15 @@
         <el-table border :data="goodList" v-loading="listLoading"  class='goodsList'>
             <el-table-column align='center' type="index" label="序号" width="70">
             </el-table-column>
-            <el-table-column align='center' prop="no" label="员工编号" filter-placement="bottom-end" >
+            <el-table-column align='center' prop="loss_id" label="编号" filter-placement="bottom-end" >
+            </el-table-column>
+            <el-table-column align='center' prop="worker_id" label="登记员工编号" filter-placement="bottom-end" >
             </el-table-column>
 
-            <el-table-column align='center' prop="sex" label="性别" width="100">
-                <template slot-scope="scope">
-                    <span style="margin-left: 10px">{{ scope.row.loss_case |statusFilter  }}</span>
-                </template>
-            </el-table-column>
-           
-            <el-table-column align='center' label="操作" width="200">
+            <!-- <el-table-column align='center' label="操作" width="200">
               <template slot-scope="scope">
-                 <el-button type="primary"  icon='el-icon-edit' @click="orderDialogVisible = true;account = scope.row" ></el-button>
-                 <el-button type="danger"  icon='el-icon-delete' @click="DelAccount(scope.row.id)"></el-button>
               </template>
-            </el-table-column>
+            </el-table-column> -->
         </el-table>
         <div class="pagination">
           <el-pagination

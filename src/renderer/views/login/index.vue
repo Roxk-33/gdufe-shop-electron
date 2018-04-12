@@ -74,6 +74,8 @@ export default {
         if (valid) {
           this.loading = true
           this.$store.dispatch('LoginByUsername', this.loginForm).then(() => {
+           
+            
             this.loading = false
             this.$router.push({ path: '/' })
           }).catch((message) => {
@@ -145,9 +147,9 @@ $light_gray:#eee;
     position: absolute;
     left: 56%;
     right: 0;
-    width: 320px;
+    width: 430px;
     padding: 15px;
-    margin: 220px auto;
+    margin: 250px 90px;
     background-color:white;
     border-radius: 4px;
     box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);

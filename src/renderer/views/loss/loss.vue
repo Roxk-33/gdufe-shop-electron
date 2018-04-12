@@ -3,8 +3,8 @@
     <div>
         <p class='shop-title'>添加损耗商品</p>
         <el-form  :model="postForm"  ref="postForm" :rules="rules" label-width="100px">
-        <el-form-item label="商品编号" prop="goodNo">
-            <el-autocomplete style="width:300px" v-model.number="postForm.lossNo" value-key='goodName' placeholder="商品编号"  required :fetch-suggestions="querySearchAsync" @select="handleSelect">
+        <el-form-item label="商品编号" prop="goodId">
+            <el-autocomplete style="width:300px" v-model.number="postForm.goodId" value-key='goodName' placeholder="商品编号"  required :fetch-suggestions="querySearchAsync" @select="handleSelect">
                <template slot-scope="props">
                   <div class="name">商品名：{{ props.item.good_name }}</div>
                 </template>
@@ -30,7 +30,7 @@
         <el-table border :data="goodList" v-loading="listLoading"  class='goodsList'>
             <el-table-column align='center' type="index" label="序号" width="70">
             </el-table-column>
-            <el-table-column align='center' prop="goodNo" label="商品编号" width="200" filter-placement="bottom-end" >
+            <el-table-column align='center' prop="goodId" label="商品编号" width="200" filter-placement="bottom-end" >
             </el-table-column>
             <el-table-column align='center' prop="goodName" label="商品名" width="200" >
             </el-table-column>
@@ -61,7 +61,7 @@ import { addLossList } from "@/api/stock";
 import { fetchAjaxGood } from "@/api/good";
 
 const defaultForm = {
-  goodNo: "",
+  goodId: "",
   lossNum: 0
 };
 export default {
@@ -89,7 +89,7 @@ export default {
       importance: 1,
       note:'',
       rules: {
-        goodNo: [
+        goodId: [
           {
             type: "number",
             required: true,
@@ -123,14 +123,14 @@ export default {
       }
     },
     handleSelect(item) {
-        this.postForm.goodNo = parseInt(item.good_id);
+        this.postForm.goodId = parseInt(item.good_id);
     },
 
     pushGood() {
       this.$refs["postForm"].validate(valid => {
         if (valid) {
 
-          fetchAjaxGood({goodNo : this.postForm.goodNo}).then(data => {
+          fetchAjaxGood({goodId : this.postForm.goodId}).then(data => {
               this.postForm.goodName = data.info.goodName;
               this.goodList.push(this.postForm);
               this.postForm = Object.assign({}, defaultForm);

@@ -13,12 +13,9 @@
             </el-option>
           </el-select>
         <el-button icon='el-icon-refresh' @click="getList" style="margin:5px" type='success '></el-button>
-          
         </div>
         
         <el-table border   :data="goodList"  highlight-current-row style="width: 90%; margin:20px auto;">
-            
-            
             <el-table-column align='center' prop="good_id" label="商品编号" width='100'>
             </el-table-column>
             <el-table-column align='center' prop="good_name" label="商品名">
@@ -62,16 +59,7 @@
           size:20,
           total_page : 100,
           type:'',
-          Types : [
-            {
-              label:'食品',
-              value:'食品'
-            },
-            {
-              label:'饮料',
-              value:'饮料'
-            }
-          ]
+          Types:[]
         }
       },
       methods: {

@@ -44,11 +44,11 @@
         <el-table border :data="cartList" v-loading="listLoading"  class='goodsList'>
             <el-table-column align='center' type="index" label="序号" width="70">
             </el-table-column>
-            <el-table-column align='center' prop="good_id" label="商品编号" width="200" filter-placement="bottom-end" >
+            <el-table-column align='center' prop="goodId" label="商品编号" width="200" filter-placement="bottom-end" >
             </el-table-column>
             <el-table-column align='center' prop="good_name" label="商品名" width="200" >
             </el-table-column>
-            <el-table-column align='center' prop="good_num" label="数量" width="200">
+            <el-table-column align='center' prop="goodNum" label="数量" width="200">
             </el-table-column>
             <el-table-column align='center' prop="good_price" label="单价" width="200">
             </el-table-column>
@@ -60,9 +60,18 @@
               </template>
             </el-table-column>
         </el-table>
-        <el-button type="success" @click="dialogVisible = true" style="float:right;" >结算</el-button>
-        <el-button type="danger" @click="emptyCart" style="float:right;margin-right:10px;" :disabled="isEmpty">清空</el-button>
-    </div>
+        <div>
+        <el-card class='cart-info btn-box'>
+            <el-button type="success" @click="dialogVisible = true" style="display:inlne-block;" :disabled="isEmpty">结算</el-button>
+            <el-button type="danger" @click="emptyCart" style="display:inlne-block;" :disabled="isEmpty">清空</el-button>
+        </el-card>
+          <el-card class='cart-info price-info'>
+            <label>总价:{{TotalPrice}}</label>
+            <label>折扣:{{discount}}</label>
+        </el-card>
+        </div>
+          
+     </div>
     <el-dialog title="结算" :visible.sync="dialogVisible" width="30%">
       <div class='pay-box'>
           <div class='pay-box-item'>
@@ -75,9 +84,8 @@
             <div class="error_input_tip" v-show="!isEnough && isNumber">实收款小于应收款</div>
             <div class="error_input_tip" v-show="!isNumber">只能输入数字</div>
           </div>
-          <div  class='pay-box-item' v-if="isEnough && pay !== 0"><span>找余：</span>
+          <div  class='pay-box-item' v-if="isEnough && pay !== 0 && pay !== ''"><span>找余：</span>
             <el-input v-model="ChangeMoney" readonly ></el-input>
-          
           </div>
       </div>  
       <span slot="footer" class="dialog-footer">
@@ -89,9 +97,9 @@
 </template>
 
 <script>
-import { cleanCart,  checkVip} from "@/api/front";
+import { cleanCart,  checkVip, pushCart} from "@/api/front";
 import { validateTel } from '@/utils/validate.js'
-import { fetchAjaxGood,fetchGood } from "@/api/good";
+import { fetchAjaxGood } from "@/api/good";
 
 const defaultForm = {
   goodId: "",
@@ -118,6 +126,7 @@ export default {
       fetchSuccess: true,
       showVip:true,
       vipInfo:{},
+      discount : 0,
       loading: false,
       listLoading: false,
       dialogVisible: false,
@@ -168,13 +177,13 @@ export default {
       this.$refs["postForm"].validate(valid => {
         if (valid) {
           this.loading = true;
-          fetchGood(this.postForm)
-            .then(data => {
-              const {  info } = data;
+          pushCart({good:this.postForm, cart:this.cartList, discount:this.discount}).then(data => {
+              const {  info, discount ,status } = data;
+              if(status){
+                this.cartList = info;
+                this.discount = discount;
                 this.loading = false;
-                info.good_total = 0;
-                info.good_total = parseFloat((parseInt(this.postForm.goodNum) * parseFloat(info.good_price)).toFixed(1));
-                this.cartList.push(info);
+              }
             })
             .catch(err => {
               this.loading = false;
@@ -184,7 +193,7 @@ export default {
       });
     },
     Clearing() {
-      cleanCart({order:this.cartList,userId:this.vipInfo.userId,pay:this.pay}).then( data =>{
+      cleanCart({order:this.cartList, userId:this.vipInfo.userId || '', pay:this.pay, discount : this.discount}).then( data =>{
         
         this.$notify({
           title: '成功',
@@ -192,6 +201,7 @@ export default {
           type: 'success'
         });
         this.cartList = [];
+        this.discount = 0;
         this.vipInfo = {};
         this.showVip = true;
         this.dialogVisible = false;
@@ -296,5 +306,31 @@ export default {
     font-size: 15px;
     width:60px;
     display: inline-block;
+  }
+  .cart-info{
+    width: 200px;
+    float: right;
+    height: 60px;
+    text-align: left;
+    margin-right: 10px;
+  }
+  .cart-info label{
+    display: block;
+    text-align: left;
+    padding-left: 30px;
+    font-weight: normal;
+  }
+  .cart-info label:nth-child(1){
+    color: #409EFF
+  }  
+  .cart-info label:nth-child(2){
+    color: #67C23A
+  }  
+  .price-info{
+    width: 140px;
+  }
+  .cart-info .el-card__body{
+    text-align: center;
+    padding:10px 0;
   }
 </style>

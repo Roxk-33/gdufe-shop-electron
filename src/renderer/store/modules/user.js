@@ -1,6 +1,7 @@
 import { loginByUsername, logout, getUserInfo } from '@/api/login'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 
+
 const user = {
   state: {
     user: '',
@@ -51,9 +52,12 @@ const user = {
 
       return new Promise((resolve, reject) => {
         loginByUsername(username, userInfo.password).then( data => {
+         
             commit('SET_TOKEN', data.token);
+            removeToken();
             setToken(data.token);
             resolve();
+            
         }).catch(error => {
           reject(error)
         })
@@ -61,10 +65,10 @@ const user = {
     },
 
     // 获取用户信息
-    GetUserInfo({ commit, state} ) {
+    GetUserInfo({ commit, state},token ) {
       return new Promise((resolve, reject) => {
         
-        getUserInfo({token : getToken()}).then( data =>{
+        getUserInfo({token : token}).then( data =>{
           if(data.status){
             const {role, name} = data;
             commit('SET_ROLES', role);
