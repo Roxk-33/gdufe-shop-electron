@@ -12,6 +12,7 @@
                 <el-button  class='good-card_closeBtn' type="primary" size='small' round icon="el-icon-close" @click="showBox = !showBox;postForm.goodId = '' "></el-button>
                 <p>商品编号：{{postForm.goodId}}</p>
                 <p>商品名称：{{postForm.goodName}}</p>
+                <p>商品价格：{{postForm.goodPrice}}</p>
               </el-card>
             </transition>
         </el-form-item>
@@ -93,11 +94,13 @@ export default {
     handleSelect(item) {
         this.postForm.goodId = parseInt(item.good_id);
         this.postForm.goodName = item.good_name;
+        this.postForm.goodPrice = item.good_price;
         this.showBox = true;
     },
 
     updatePrice() {
       delete this.postForm.goodName;
+      delete this.postForm.goodPrice;
       updateGoodPrice(this.postForm).then( data =>{
           
             this.$message({

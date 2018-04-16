@@ -145,9 +145,9 @@ $light_gray:#eee;
   background-size : 100% 100%;
   .login-form {
     position: absolute;
-    left: 56%;
+    left: 66%;
     right: 0;
-    width: 430px;
+    width: 330px;
     padding: 15px;
     margin: 250px 90px;
     background-color:white;

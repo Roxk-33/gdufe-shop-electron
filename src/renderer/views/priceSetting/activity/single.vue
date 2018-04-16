@@ -1,40 +1,42 @@
 <template>
 <div style="margin:10px auto;  width:100%;">
-        <el-form  :model="postForm"  ref="postForm" :rules="rules" label-width="100px" style="width:50%;margin:10px auto;">
+        <el-form  :model="postForm"  ref="postForm" :rules="rules" label-width="100px" style="" class='formGood'>
         <el-form-item label="商品编号" prop="goodId" style="width:500px">
             <el-autocomplete  style="width:200px" v-model.number="postForm.goodId" value-key='goodName' placeholder="商品编号"  required :fetch-suggestions="querySearchAsync" @select="handleSelect">
                <template slot-scope="props">
                   <div class="name">商品名：{{ props.item.good_name }}</div>
                 </template>
             </el-autocomplete>
-            <transition name="el-fade-in-linear">
-              <el-card class="good-card" v-show='showBox'>
-                <el-button  class='good-card_closeBtn' type="primary" size='small' round icon="el-icon-close" @click="showBox = !showBox;postForm.goodId = '' "></el-button>
-                <p>商品编号：{{postForm.goodId}}</p>
-                <p>商品名称：{{postForm.goodName}}</p>
-              </el-card>
-            </transition>
+            
         </el-form-item>
-        <el-form-item label="限定数量" prop="price" style="width:500px">
+        <el-form-item label="限定数量" prop="num" style="width:500px">
             <el-input-number v-model.number="postForm.num " :min="0"  label="价格"></el-input-number>
         </el-form-item>
-         <el-form-item label="活动价格" prop="price" style="width:500px">
-            <el-input v-model.number="postForm.price" :min="1"  style="width:150px"></el-input>
+         <el-form-item label="优惠" prop="discount" style="width:500px">
+            <el-input v-model.number="postForm.discount" :min="1"  style="width:150px"></el-input>
         </el-form-item>
         <el-form-item >
             <el-button type="primary" @click="updatePrice" style="width:150px;" v-loading="loading" >确认</el-button>
         </el-form-item>
         </el-form>
-
+        <transition name="el-fade-in-linear" >
+              <el-card class="good-card" v-show='showBox' >
+                <el-button  class='good-card_closeBtn' type="primary" size='small' round icon="el-icon-close" @click="showBox = !showBox;postForm.goodId = '' "></el-button>
+                <p>商品编号：{{postForm.goodId}}</p>
+                <p>商品名称：{{postForm.goodName}}</p>
+                <p>商品价格：{{postForm.goodPrice}}</p>
+              </el-card>
+            </transition>
 </div>
 </template>
 
 <script>
-import { fetchAjaxGood, updateGoodPrice } from "@/api/good";
+import { fetchAjaxGood, updateGoodPriceSingle } from "@/api/good";
 
 const defaultForm = {
   goodId: "",
-  price: 0
+  discount: 0,
+  num : 1
 };
 export default {
   name: "priceSetting",
@@ -69,7 +71,7 @@ export default {
             trigger: "change"
           }
         ],
-        price: [
+        discount: [
           {
             type: "number",
             required: true,
@@ -97,12 +99,14 @@ export default {
     handleSelect(item) {
         this.postForm.goodId = parseInt(item.good_id);
         this.postForm.goodName = item.good_name;
+        this.postForm.goodPrice = item.good_price;
         this.showBox = true;
     },
 
     updatePrice() {
       delete this.postForm.goodName;
-      updateGoodPrice(this.postForm).then( data =>{
+      delete this.postForm.goodPrice;
+      updateGoodPriceSingle(this.postForm).then( data =>{
           
             this.$message({
                 message: "设置成功",
@@ -110,7 +114,7 @@ export default {
             });
             this.postForm = {
                 goodId: "",
-                price: 0
+                discount: 0
             };
             this.showBox = false;
             
@@ -126,9 +130,16 @@ export default {
    .input-with-select{
     width: 420px;
   }
+    .formGood{
+    display: inline-block;
+    width:400px;
+       margin: 10px 0 0 300px;
+  }
+ 
   .good-card{
     width: 250px;
-    margin: 10px 0;
+    display: inline-block;
+    
   }
   .goodsList{
     width: 100%;
@@ -182,4 +193,6 @@ export default {
     width:220px;
     display: inline-block;
   }
+
+
 </style>

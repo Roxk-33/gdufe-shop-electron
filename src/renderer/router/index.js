@@ -57,6 +57,30 @@ export const asyncRouterMap = [{
         ],
     },
     {
+        path: '/goodList',
+        component: Layout,
+        redirect: 'noredirect',
+        name: 'goodList',
+        meta:{
+            roles: ['manager']
+        },
+        children: [
+            { path: 'index', component: _import('goodList/index'), name: 'goodList', meta: { title: 'goodList', noCache: true, icon: 'catalog'} },
+        ],
+    },
+    {
+        path: '/orderList',
+        component: Layout,
+        redirect: 'noredirect',
+        name: 'orderList',
+        meta:{
+            roles: ['manager']
+        },
+        children: [
+            { path: 'index', component: _import('orderList/index'), name: 'orderList', meta: { title: 'orderList', noCache: true, icon: 'catalog'} },
+        ],
+    },
+    {
         path: '/account',
         component: Layout,
         redirect: 'noredirect',

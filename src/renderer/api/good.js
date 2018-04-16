@@ -7,6 +7,13 @@ export function fetchGood(params) {
     params
   })
 }
+export function fetchGoodList(params) {
+  return request({
+    url:'/good/list',
+    method: 'get',
+    params
+  })
+}
 export function addGoodInfo(data) {
   return request({
     url:'/good/addInfo',
@@ -22,9 +29,30 @@ export function fetchAjaxGood(params) {
     params
   })
 }
-export function updateGoodPrice(data) {
+export function updateGoodPriceMultiple(data) {
   return request({
-    url: '/good/priceSetting',
+    url: '/good/priceSetting/multiple',
+    method: 'post',
+    data
+  })
+}
+export function updateGoodPriceSingle(data) {
+  return request({
+    url: '/good/priceSetting/single',
+    method: 'post',
+    data
+  })
+}
+export function getPriceCurve(params) {
+  return request({
+    url: '/good/priceCurve',
+    method: 'get',
+    params
+  })
+}
+export function editGoodInfo(data) {
+  return request({
+    url: '/good/modifyInfo',
     method: 'post',
     data
   })

@@ -8,6 +8,15 @@ export function fetchStockList(params) {
     params
   })
 }
+
+export function fetchLockList(params) {
+  return request({
+    url:'/stock/lock/list',
+    method: 'get',
+    params
+  })
+}
+
 export function fetchGoodType() {
   return request({
     url: '/stock/inventory/type',

@@ -25,7 +25,7 @@
         <p class='shop-title'>添加商品</p>
         <el-form :inline="true" :model="postForm"  ref="postForm" :rules="rules" class="demo-form-inline">
         <el-form-item label="商品编号" prop="goodId">
-            <el-autocomplete  style="width:300px" v-model.number="postForm.goodId" value-key='goodName' placeholder="商品编号"  required :fetch-suggestions="querySearchAsync" @select="handleSelect">
+            <el-autocomplete  style="width:300px" v-model.number="postForm.goodId" value-key='goodId' placeholder="商品编号"  required :fetch-suggestions="querySearchAsync" @select="handleSelect">
                <template slot-scope="props" >
                   <div class="name">商品名：{{ props.item.good_name }}</div>
                 </template>
@@ -67,7 +67,7 @@
         </el-card>
           <el-card class='cart-info price-info'>
             <label>总价:{{TotalPrice}}</label>
-            <label>折扣:{{discount}}</label>
+            <label v-if='discount > 0'>折扣:-{{discount}}</label>
         </el-card>
         </div>
           
@@ -169,7 +169,6 @@ export default {
        
     },
     handleSelect(item) {
-    
         this.postForm.goodId = parseInt(item.good_id);
     },
 
@@ -324,7 +323,7 @@ export default {
     color: #409EFF
   }  
   .cart-info label:nth-child(2){
-    color: #67C23A
+    color: rgb(197, 59, 25)
   }  
   .price-info{
     width: 140px;

@@ -2,7 +2,7 @@
 <div style="" class='activity-box'>
         <el-form  :inline="true" :model="postForm"  ref="postForm" :rules="rules" label-width="80px" >
         <el-form-item label="商品编号" prop="goodId" style="width:300px">
-            <el-autocomplete  style="width:200px" v-model.number="postForm.goodId" value-key='goodName' placeholder="商品编号"  required :fetch-suggestions="querySearchAsync" @select="handleSelect">
+            <el-autocomplete  style="width:200px" v-model="postForm.goodId" value-key='goodName' placeholder="商品编号"  required :fetch-suggestions="querySearchAsync" @select="handleSelect">
                <template slot-scope="props">
                   <div class="name">商品名：{{ props.item.good_name }}</div>
                 </template>
@@ -30,7 +30,7 @@
             <el-table-column align='center' type="index" label="商品参与数量" width="120px">
             </el-table-column>
         </el-table>
-           优惠： <el-input v-model.number="postForm.price" :min="1"  style="width:80px;margin-right:10px;"></el-input>
+           优惠： <el-input v-model.number="discount" :min="1"  style="width:80px;margin-right:10px;"></el-input>
         
         <el-button type="primary" @click="updatePrice" style="width:100px;margin:10px auto;" v-loading="loading" >确认</el-button>
         
@@ -38,11 +38,11 @@
 </template>
 
 <script>
-import { fetchAjaxGood, updateGoodPrice } from "@/api/good";
+import { fetchAjaxGood, updateGoodPriceMultiple } from "@/api/good";
 
 const defaultForm = {
   goodId: "",
-  price: 0
+  num:1
 };
 export default {
   name: "priceSetting",
@@ -63,6 +63,7 @@ export default {
       postForm: Object.assign({}, defaultForm),
       fetchSuccess: true,
       loading: false,
+      discount : 0,
       listLoading: false,
       dialogVisible: false,
       goodsList : [],
@@ -71,14 +72,14 @@ export default {
       importance: 1,
       note:'',
       rules: {
-        goodId: [
-          {
-            type: "number",
-            required: true,
-            message: "输入数字",
-            trigger: "change"
-          }
-        ],
+        // goodId: [
+        //   {
+        //     type: "number",
+        //     required: true,
+        //     message: "输入数字",
+        //     trigger: "change"
+        //   }
+        // ],
         price: [
           {
             type: "number",
@@ -111,12 +112,16 @@ export default {
     },
 
     updatePrice() {
-      updateGoodPrice(this.postForm).then( data =>{
+      console.log(this.goodsList);
+      updateGoodPriceMultiple({goodsList : this.goodsList,discount:this.discount}).then( data =>{
           
             this.$message({
                 message: "设置成功",
                 type: "success"
             });
+
+           
+        
             this.postForm = {
                 goodId: "",
                 price: 0
@@ -129,7 +134,8 @@ export default {
         this.goodsList.push(this.postForm);
         this.postForm = {
                 goodId: "",
-                price: 0
+                price: 0,
+                num : 1,
             };
     }
     

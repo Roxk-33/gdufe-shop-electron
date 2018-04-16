@@ -100,7 +100,7 @@ export default {
       return statusMap[status]
     },
     TimeConversion(time){
-      const date = new Date(time *1000);
+      const date = new Date(time);
       return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`
     }
   },

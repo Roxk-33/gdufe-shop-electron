@@ -6,6 +6,8 @@ export default {
     permission: '权限测试页',
     stock:'库存管理',
     settleAccounts:'前台结算',
+    goodList:'商品目录',
+    orderList:'订单目录',
     vipAdd:'添加会员',
     storage:'商品入库',
     catalogStock:'库存目录',

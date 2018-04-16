@@ -62,7 +62,8 @@ import { fetchAjaxGood } from "@/api/good";
 
 const defaultForm = {
   goodId: "",
-  lossNum: 0
+  lossNum: 0,
+  lossCase:'0'
 };
 export default {
   name: "postList",
