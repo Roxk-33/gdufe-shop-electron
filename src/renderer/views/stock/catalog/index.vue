@@ -58,7 +58,7 @@
           currentPage:1,
           size:20,
           total_page : 100,
-          type:'',
+          type:'全部',
           Types:[]
         }
       },
@@ -79,7 +79,10 @@
          this.getList();
          fetchGoodType().then( data =>{
            this.Types = data.info;
+           this.Types.unshift({good_divide:'全部'})
+           
          })
+         
       },
       mounted(){
         

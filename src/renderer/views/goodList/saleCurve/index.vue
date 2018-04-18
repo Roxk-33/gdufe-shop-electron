@@ -15,7 +15,10 @@ export default {
       type: String,
       default: 'chart'
     },
-   
+    timeSpan: {
+      type: Number,
+      default: 7
+    },
     width: {
       type: String,
       default: '100%'
@@ -53,12 +56,18 @@ export default {
       handler(val) {
         this.setOptions(val)
       }
+    },
+    timeSpan:{
+      deep: true,
+      handler(val) {
+        this.setOptions(this.chartData)
+      }
     }
   },
   
   methods: {
-   
-    setOptions({ profit, time, revenue } = {}) {
+    
+     setOptions({ sale, time  } = {}) {
       this.chart.setOption({
         color:  ['#5793f3', '#d14a61', '#675bba'],
 
@@ -69,7 +78,7 @@ export default {
             }
         },
         legend: {
-            data:['营业额', '利润']
+            data:['销售额']
         },
         grid: {
           left: 50,
@@ -98,11 +107,11 @@ export default {
                         color: '#5793f3'
                     }
                 },
-                data: time.reverse()
+                data: time
             },
         yAxis: [
             {   
-              name:'金额',
+              name:'销售量/个',
                 type: 'value'
             }
         ],
@@ -111,14 +120,9 @@ export default {
                 name:'营业额',
                 type:'line',
                 smooth: true,
-                data: profit.reverse()
+                data: sale
             },
-            {
-                name:'利润',
-                type:'line',
-                smooth: false,
-                data: revenue.reverse()
-            },
+           
         ]})
     },
     initChart() {

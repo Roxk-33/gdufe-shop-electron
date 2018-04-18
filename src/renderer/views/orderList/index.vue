@@ -9,9 +9,6 @@
             <el-table-column align='center' prop="order_id" label="订单编号" width='100'>
             </el-table-column>
             <el-table-column align='center' prop="create_time" label="结算时间">
-                <template slot-scope="scope">
-                    {{scope.row.create_time | TimeConvert}}
-                </template>
             </el-table-column>
             <el-table-column align='center' prop="total_pay" label="金额">
             </el-table-column>
@@ -108,7 +105,7 @@
       },
       filters:{
           TimeConvert(time){
-            const date = new Date(parseInt(time) );
+            const date = new Date(parseInt(time)*100 );
             return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`
           }
       }

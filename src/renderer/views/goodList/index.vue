@@ -26,10 +26,13 @@
             </el-table-column>
             <el-table-column align='center' prop="good_price" label="当前价格">
             </el-table-column>
-            <el-table-column align='center'  label="操作" width='400'>
+            <el-table-column align='center'  label="操作" width='500'>
               <template slot-scope="scope">
                   <el-button type="primary" size="small" @click="getPriceCurve(scope.row.good_id)"
-                            icon="el-icon-zoom-in" >历史价格曲线
+                            icon="el-icon-zoom-in" >历史价格
+                  </el-button>
+                  <el-button type="primary" size="small" @click="getGoodSale(scope.row.good_id)"
+                            icon="el-icon-zoom-in" >销售情况
                   </el-button>
                   <el-button type="success" size="small" @click="getGoordDetail(scope.row)"
                             icon="el-icon-zoom-in" >查看/修改 详情
@@ -43,11 +46,20 @@
 
         <el-dialog
             title="商品价格历史曲线图"
-            :visible.sync="dialogVisible"
+            :visible.sync="dialogVisiblePrice"
             width="50%">
           <price-curve :chart-data="curveData"></price-curve>
           <span slot="footer" class="dialog-footer">
-            <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+            <el-button type="primary" @click="dialogVisiblePrice = false">确 定</el-button>
+          </span>
+        </el-dialog>
+        <el-dialog
+            title="商品销售曲线图"
+            :visible.sync="dialogVisibleSale"
+            width="50%">
+          <sale-curve :chart-data="saleData"></sale-curve>
+          <span slot="footer" class="dialog-footer">
+            <el-button type="primary" @click="dialogVisibleSale = false">确 定</el-button>
           </span>
         </el-dialog>
 
@@ -59,7 +71,7 @@
                     <el-form-item label="商品名称：" prop="good_name">
                         <el-input v-model="goodInfo.good_name"  ></el-input>                        
                     </el-form-item>
-                    <el-form-item label="商品价格：" prop="good_price">
+                    <el-form-item label="销售价格：" prop="good_price">
                         <el-input v-model.number="goodInfo.good_price" placeholder="商品价格" required></el-input>
                     </el-form-item>
                     <el-form-item label="商品库存：" prop="good_stock">
@@ -68,8 +80,11 @@
                     <el-form-item label="供应商：" prop="good_supplier">
                         <el-input type="text" v-model="goodInfo.good_supplier" placeholder="供应商" required></el-input>
                     </el-form-item>
-                    <el-form-item label="库存警告值：" prop="instock_price">
+                    <el-form-item label="成本价：" prop="instock_price">
                         <el-input type="text" v-model="goodInfo.instock_price"  ></el-input>
+                    </el-form-item>
+                    <el-form-item label="库存警告值：" prop="warn_stock">
+                        <el-input type="text" v-model="goodInfo.warn_stock"  ></el-input>
                     </el-form-item>
                     <el-form-item label="分类：" prop="good_divide">
                          <el-select v-model="goodInfo.good_divide" placeholder="请选择" >
@@ -105,8 +120,9 @@
 
 <script>
     import PriceCurve from "./priceCurve";
+    import SaleCurve from "./saleCurve";
     import {  fetchGoodType } from "@/api/stock";
-    import { fetchGoodList, getPriceCurve, editGoodInfo, deleteGood } from "@/api/good";
+    import { fetchGoodList, getPriceCurve, editGoodInfo, deleteGood,getGoodSale  } from "@/api/good";
     export default {
       name: 'goodCatalog',
       data() {
@@ -115,18 +131,21 @@
           goodList:[],
           goodInfo:{},
           loading: false,
-          dialogVisible:false,
+          dialogVisiblePrice:false,
+          dialogVisibleSale:false,
           goodInfoVisible:false,
+          saleData:{},
           currentPage:1,
           size:20,
           curveData:{},
           total_page : 100,
-          type:'',
+          type:'全部',
           Types:[]
         }
       },
       components: {
-        PriceCurve
+        PriceCurve,
+        SaleCurve
       },
       methods: {
         getList(){
@@ -141,7 +160,14 @@
           getPriceCurve({goodId:id}).then(data=>{
             this.curveData.time = data.time;
             this.curveData.price = data.price;
-            this.dialogVisible = true;
+            this.dialogVisiblePrice = true;
+          })
+        },
+        getGoodSale(id){
+          getGoodSale({goodId:id}).then(data=>{
+            this.saleData.time = data.time;
+            this.saleData.sale = data.sale;
+            this.dialogVisibleSale = true;
           })
         },
         getGoordDetail(target){
@@ -164,7 +190,6 @@
                 type:'success',
                 message:'删除成功'
               })
-            this.currentPage = 1;
             this.getList();
           })
         }
@@ -172,7 +197,8 @@
       created(){
          this.getList();
          fetchGoodType().then( data =>{
-           this.Types = data.info;
+           this.Types = data.info
+           this.Types.unshift({good_divide:'全部'})
          })
       }
     }

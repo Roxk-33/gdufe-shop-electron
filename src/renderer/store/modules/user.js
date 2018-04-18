@@ -70,6 +70,7 @@ const user = {
         
         getUserInfo({token : token}).then( data =>{
           if(data.status){
+            
             const {role, name} = data;
             commit('SET_ROLES', role);
             commit('SET_NAME', name);

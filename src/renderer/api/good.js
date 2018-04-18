@@ -36,6 +36,13 @@ export function fetchAjaxGood(params) {
     params
   })
 }
+export function updateGoodPrice(data) {
+  return request({
+    url: '/good/priceSetting',
+    method: 'post',
+    data
+  })
+}
 export function updateGoodPriceMultiple(data) {
   return request({
     url: '/good/priceSetting/multiple',
@@ -74,6 +81,13 @@ export function getGoodPriceDetail(params) {
 export function getPriceCurve(params) {
   return request({
     url: '/good/priceCurve',
+    method: 'get',
+    params
+  })
+}
+export function getGoodSale(params) {
+  return request({
+    url: '/good/sale',
     method: 'get',
     params
   })

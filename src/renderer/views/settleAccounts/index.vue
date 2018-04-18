@@ -66,8 +66,10 @@
             <el-button type="danger" @click="emptyCart" style="display:inlne-block;" :disabled="isEmpty">清空</el-button>
         </el-card>
           <el-card class='cart-info price-info'>
-            <label>总价：{{TotalPrice}}</label>
-            <label >优惠：<strong style="font-size:20px;margin:0 3px;" v-if='discount'>-</strong>{{discount}}</label>
+            <div class='non-discount price-box' :class="{ 'has-discount': discount }">总价：{{TotalPrice}}</div>
+            <transition name="el-fade-in">
+              <div v-show='discount' class='discount-box'>优惠：<strong style="font-size:20px;margin:0 3px;" >-</strong>{{discount}}</div>
+            </transition>
         </el-card>
         </div>
           
@@ -183,7 +185,6 @@ export default {
                 this.postForm.goodName = data.info.good_name;
 
                 this.postForm.totalPrice = this.postForm.goodPrice * this.postForm.goodNum;
-
 
                 this.cartList.push(this.postForm);
                 this.postForm = Object.assign({}, defaultForm);
@@ -335,23 +336,38 @@ export default {
     text-align: left;
     margin-right: 10px;
   }
-  .cart-info label{
+  .cart-info .price-box{
     display: block;
     text-align: left;
-    padding-left: 30px;
-    font-weight: normal;
+    padding-left: 40px;
+    font-weight: bolder;
+    
   }
-  .cart-info label:nth-child(1){
-    color: #409EFF
-  }  
-  .cart-info label:nth-child(2){
-    color: rgb(197, 59, 25)
-  }  
+
   .price-info{
     width: 140px;
   }
   .cart-info .el-card__body{
     text-align: center;
     padding:10px 0;
+  }
+  .cart-info .non-discount{
+    margin-top:10px;
+    font-weight: bolder;
+    transition: transform .5s;
+    color: #409EFF
+    
+    
+  }
+  .cart-info .discount-box{
+    margin-top: -10px;
+    text-align: left;
+    padding-left: 30px;
+    transition:  opacity .5s;
+    color: rgb(197, 59, 25)
+    
+  }
+  .has-discount{
+    transform: translate(-10px,-10px)
   }
 </style>

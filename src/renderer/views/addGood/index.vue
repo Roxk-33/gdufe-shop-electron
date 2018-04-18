@@ -6,20 +6,25 @@
             <el-input v-model="postForm.goodName" placeholder="商品名称" required></el-input>
         </el-form-item>
         <el-form-item label="供应商" prop="supplier">
-            <el-input v-model="postForm.supplier" placeholder="入库数量" required></el-input>
+            <el-input v-model="postForm.supplier" placeholder="供应商" required></el-input>
         </el-form-item>
         <el-form-item label="规格" prop="goodAttr">
             <el-input v-model="postForm.goodAttr" placeholder="规格" required></el-input>
+        </el-form-item>
+        <el-form-item label="销售价格" prop="goodPrice">
+            <el-input v-model="postForm.goodPrice" placeholder="销售价格" required></el-input>
         </el-form-item>
         <el-form-item label="描述" prop="goodDescribe">
             <el-input v-model="postForm.goodDescribe" placeholder="描述"></el-input>
         </el-form-item>
         <el-form-item label="分类" prop="goodDivide">
 
-        <el-select v-model="postForm.goodDivide" placeholder="请选择">
+
+        <el-select v-model="postForm.goodDivide"  filterable allow-create default-first-option placeholder="请选择分类，可输入">
             <el-option v-for="item in Types" :key="item.good_divide" :label="item.good_divide" :value="item.good_divide">
             </el-option>
         </el-select>
+
         </el-form-item>
         <el-form-item label="成本价" prop="cost">
             <el-input v-model.number="postForm.cost" placeholder="成本价" required></el-input>
@@ -50,6 +55,7 @@ export default {
       postForm: Object.assign({}, defaultForm),
       fetchSuccess: true,
       loading: false,
+
       Types:[],
       
       rules: {
@@ -69,7 +75,16 @@ export default {
             message: "输入数字",
             trigger: "blur"
           }
-        ]
+        ],
+        goodPrice: [
+          {
+            type: "number",
+            required: true,
+            message: "输入数字",
+            trigger: "blur"
+          }
+        ],
+
       }
     };
   },
@@ -96,10 +111,10 @@ export default {
     
   },
   created(){
-         fetchGoodType().then( data =>{
-           this.Types = data.info;
-         })
-      }
+      fetchGoodType().then( data =>{
+        this.Types = data.info;       
+    })
+  }
 };
 </script>
 

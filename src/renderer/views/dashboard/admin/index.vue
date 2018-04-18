@@ -1,34 +1,39 @@
 <template>
   <div class="dashboard-editor-container">
 
-    <panel-group @handleSetLineChartData="handleSetLineChartData"></panel-group>
+    <!-- <panel-group @handleSetLineChartData="handleSetLineChartData"></panel-group> -->
 
-    <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
+    <!-- <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
 
       <div class="box-card">
-        时间范围：<el-cascader
-          :options="timeSpanOption"
-          :show-all-levels="false"
-          @change = 'handleSaleTimeSpan'
-          placeholder="过往七天"
-          size='small'
-      ></el-cascader>
+        时间范围：
+       
+        <el-date-picker v-model="saleTimeSpan" type="daterange" align="right" readonly unlink-panels range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2" value-format='timestamp'>
+        </el-date-picker>
+
+        <el-select v-model="saleTimeType" @change="getSale">
+          <el-option label="过去一周" value="week">过去一周</el-option>
+          <el-option label="过去一月" value="month">过去一月</el-option>
+        </el-select>
       </div>
       
-      <sale-chart :chart-data="saleChartData" :time-span='saleTimeSpan'></sale-chart>
-    </el-row>
+      <sale-chart :chart-data="saleChartData"></sale-chart>
+    </el-row> -->
     <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
       <div class="box-card">
-        时间范围：<el-cascader
+        时间范围：
+        <!-- <el-cascader
           :options="timeSpanOption"
           :show-all-levels="false"
           @change = 'handleGoodTimeSpan'
           placeholder="过往七天"
           
-      ></el-cascader>
+      ></el-cascader> -->
+      <el-select v-model="goodTimeType" @change="getGood">
+          <el-option label="过去一周" value="week">过去一周</el-option>
+          <el-option label="过去一月" value="month">过去一月</el-option>
+        </el-select>
       </div>
-      
-
       <good-chart :chart-data="goodChartData"></good-chart>
     </el-row>
 
@@ -50,28 +55,6 @@ import BoxCard from './components/BoxCard'
 
 import { getSale, getGood} from '@/api/statistics'
 
-const lineChartData = {
-  newVisitis: {
-    expectedData: [100, 120, 161, 134, 105, 160, 170],
-    actualData: [120, 82, 91, 154, 162, 140, 170]
-  },
-  messages: {
-    expectedData: [200, 192, 120, 144, 160, 130, 140],
-    actualData: [180, 160, 151, 106, 145, 150, 130]
-  },
-  purchases: {
-    expectedData: [80, 100, 121, 104, 105, 90, 100],
-    actualData: [120, 90, 100, 138, 142, 130, 130]
-  },
-  shoppings: {
-    expectedData: [130, 140, 141, 142, 145, 150, 160],
-    actualData: [120, 82, 91, 154, 162, 140, 130]
-  },
-  sale:{
-    
-  },
-}
-
 export default {
   name: 'dashboard-admin',
   components: {
@@ -88,14 +71,14 @@ export default {
         profit:[]
       },
       goodChartData: { 
-          expectedData: [100, 120, 161, 134, 105, 160, 170],
-          actualData: [120, 82, 91, 154, 162, 140, 170]
+          goodNum:[],
+          goodName:[]
       },
-      chartData : {},
       sql:'',
       saleTimeSpan : 7,
-      saleTimeType : 'day',
+      saleTimeType : 'week',
       goodTimeSpan : 7,
+      goodTimeType : 'week',
       
       timeSpanOption : [
         {
@@ -132,29 +115,34 @@ export default {
       this.lineChartData = lineChartData[type]
     },
     handleSaleTimeSpan(saleTimeSpan){
-      this.saleTimeType = saleTimeSpan[0]
-      this.saleTimeSpan = saleTimeSpan[1]
-      this.saleChartData = {
-            expectedData: [100, 120, 161, 134, 105, 160, 170,100, 120, 161, 134, 105, 160, 170],
-            actualData: [120, 82, 91, 154, 162, 140, 170,100, 120, 161, 134, 105, 160, 170]
-        }
+      this.saleTimeType = saleTimeSpan[0];
+      this.saleTimeSpan = saleTimeSpan[1];
+      this.getSale();
     },
-    handleGoodTimeSpan(saleTimeSpan){
-      console.log(this.saleTimeSpan);
-      this.goodChartData = {
-            expectedData: [100, 220, 411, 134, 1405, 160, 170],
-            actualData: [120, 82, 91, 154, 162, 140, 170]
-        }
+    handleGoodTimeSpan(goodTimeSpan){
+      this.goodTimeType = goodTimeSpan[0];
+      this.goodTimeSpan = goodTimeSpan[1];
+      this.getGood();
     },
     getSale(){
       getSale({type:this.saleTimeType,span:this.saleTimeSpan}).then(data=>{
         this.saleChartData = data.info;
+        console.log(1);
       })
-    }
+    },
+    getGood(){
+      getGood({type:this.goodTimeType}).then(data=>{
+        this.goodChartData.goodName = data.goodName;
+        this.goodChartData.goodNum = data.goodNum;
+
+        console.log(this.goodChartData);
+      })
+    },
   },
 
   created(){
     this.getSale();
+    this.getGood();
   }
  
 }

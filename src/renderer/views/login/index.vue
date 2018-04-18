@@ -24,6 +24,7 @@
 
       
     </el-form>
+    <span class='copyright'>Copyright © 2018 肖志豪 郭晓真 谢喜彬 保留所有权利</span>
   </div>
 </template>
 
@@ -75,12 +76,10 @@ export default {
           this.loading = true
           this.$store.dispatch('LoginByUsername', this.loginForm).then(() => {
            
-            
             this.loading = false
             this.$router.push({ path: '/' })
           }).catch((message) => {
             this.loading = false;
-            this.$message.error(message);
           })
         } else {
           console.log('error submit!!')
@@ -205,6 +204,14 @@ $light_gray:#eee;
     position: absolute;
     right: 35px;
     bottom: 28px;
+  }
+  .copyright{
+    position: absolute;
+    bottom:40px;
+    font-size:20px;
+    color:white;
+    left: 50%;
+    transform: translateX(-50%);
   }
 }
 </style>

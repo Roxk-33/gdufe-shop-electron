@@ -57,7 +57,7 @@ export const asyncRouterMap = [
             roles: ['manager']
         },
         children: [
-            { path: 'index', component: _import('orderList/index'), name: 'orderList', meta: { title: 'orderList', noCache: true, icon: 'catalog'} },
+            { path: 'index', component: _import('orderList/index'), name: 'orderList', meta: { title: 'orderList', noCache: true, icon: 'list'} },
         ],
     },
     {
@@ -73,7 +73,7 @@ export const asyncRouterMap = [
             name: 'vipList',
             meta: {
                 title: 'vipList',
-                icon: 'catalog',
+                icon: 'list',
             }
         }],
     },
@@ -88,8 +88,8 @@ export const asyncRouterMap = [
             roles: ['stocker','manager','accountant']
         },
         children: [
-            { path: 'catalog', component: _import('stock/catalog/index'), name: 'catalog', meta: { title: 'catalogStock', noCache: true, icon: 'catalog' } },
-            { path: 'lack', component: _import('stock/lack/index'), name: 'catalog', meta: { title: 'lockStock', noCache: true, icon: 'catalog' } },
+            { path: 'catalog', component: _import('stock/catalog/index'), name: 'catalog', meta: { title: 'catalogStock', noCache: true, icon: 'list' } },
+            { path: 'lack', component: _import('stock/lack/index'), name: 'catalog', meta: { title: 'lockStock', noCache: true, icon: 'list' } },
         ],
     },
 
@@ -105,7 +105,7 @@ export const asyncRouterMap = [
         },
         children: [
             { path: 'addAccount', component: _import('account/addAccount/index'), name: 'addAccount', meta: { title: 'addAccount', noCache: true, icon: 'addAccount' } },
-            { path: 'catalogAccount', component: _import('account/catalog/index'), name: 'catalogAccount', meta: { title: 'catalogAccount', noCache: true, icon: 'catalog' } },
+            { path: 'catalogAccount', component: _import('account/catalog/index'), name: 'catalogAccount', meta: { title: 'catalogAccount', noCache: true, icon: 'list' } },
         ],
     },
     {
@@ -119,7 +119,7 @@ export const asyncRouterMap = [
             roles: ['manager']
         },
         children: [
-            { path: 'list', component: _import('goodList/index'), name: 'goodList', meta: { title: 'goodList', noCache: true, icon: 'catalog'} },            
+            { path: 'list', component: _import('goodList/index'), name: 'goodList', meta: { title: 'goodList', noCache: true, icon: 'list'} },            
             { path: 'index', component: _import('addGood/index'), name: 'addGood',meta: { title: 'addGood', icon: 'adjunction'}},
         ],
     },
@@ -196,7 +196,7 @@ export const asyncRouterMap = [
                 name: 'priceSettingList',
                 meta:{
                     title: 'priceSettingList',
-                    icon: 'catalog',
+                    icon: 'list',
             }},
         ],
     },
@@ -215,7 +215,7 @@ export const asyncRouterMap = [
                 name: 'lossList',
                 meta: {
                     title: 'lossList',
-                    icon: 'catalog',
+                    icon: 'list',
                     roles: ['stocker', 'accountant','manager']
                 }
             },

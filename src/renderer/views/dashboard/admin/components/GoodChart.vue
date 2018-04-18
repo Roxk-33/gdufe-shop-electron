@@ -56,7 +56,7 @@ export default {
   },
   methods: {
     
-    setOptions({ expectedData, actualData } = {}) {
+    setOptions({ goodNum, goodName } = {}) {
       this.chart.setOption({
         color: ['#3398DB'],
         title: {
@@ -77,7 +77,7 @@ export default {
         xAxis : [
             {
                 type : 'category',
-                data : actualData,
+                data : goodName,
                 axisTick: {
                     alignWithLabel: true
                 }
@@ -93,7 +93,7 @@ export default {
                 name:'销售数量',
                 type:'bar',
                 barWidth: '60%',
-                data:expectedData
+                data:goodNum
             }
         ]
       })
