@@ -15,14 +15,11 @@
             <el-input v-model="postForm.goodDescribe" placeholder="描述"></el-input>
         </el-form-item>
         <el-form-item label="分类" prop="goodDivide">
-          <el-select v-model="postForm.goodDivide" placeholder="分类" required>
-            <el-option
-              v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
+
+        <el-select v-model="postForm.goodDivide" placeholder="请选择">
+            <el-option v-for="item in Types" :key="item.good_divide" :label="item.good_divide" :value="item.good_divide">
             </el-option>
-          </el-select>
+        </el-select>
         </el-form-item>
         <el-form-item label="成本价" prop="cost">
             <el-input v-model.number="postForm.cost" placeholder="成本价" required></el-input>
@@ -37,6 +34,8 @@
 
 <script>
 import { addGoodInfo } from "@/api/good";
+import {  fetchGoodType } from "@/api/stock";
+
 const defaultForm = {
   goodName: "",
   supplier:'',
@@ -51,22 +50,8 @@ export default {
       postForm: Object.assign({}, defaultForm),
       fetchSuccess: true,
       loading: false,
-      options: [{
-          value: '选项1',
-          label: '黄金糕'
-        }, {
-          value: '选项2',
-          label: '双皮奶'
-        }, {
-          value: '选项3',
-          label: '蚵仔煎'
-        }, {
-          value: '选项4',
-          label: '龙须面'
-        }, {
-          value: '选项5',
-          label: '北京烤鸭'
-        }],
+      Types:[],
+      
       rules: {
         
         cost: [
@@ -74,7 +59,7 @@ export default {
             type: "number",
             required: true,
             message: "输入数字",
-            trigger: "change"
+            trigger: "blur"
           }
         ],
         goodNum: [
@@ -82,7 +67,7 @@ export default {
             type: "number",
             required: true,
             message: "输入数字",
-            trigger: "change"
+            trigger: "blur"
           }
         ]
       }
@@ -93,8 +78,9 @@ export default {
       this.$refs['postForm'].validate(valid => {
         if (valid) {
             addGoodInfo({good:this.postForm}).then(data => {
+              console.log(1);
                     this.$message({
-                        message: data.message,
+                        message: '添加成功',
                         type: "success"
                     });
                 })
@@ -106,8 +92,14 @@ export default {
         }
       });
       
-    }
-  }
+    },
+    
+  },
+  created(){
+         fetchGoodType().then( data =>{
+           this.Types = data.info;
+         })
+      }
 };
 </script>
 

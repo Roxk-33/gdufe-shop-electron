@@ -6,6 +6,7 @@ const path = require('path')
  */
 module.exports = {
   arch: 'x64',
+  // arch: 'ia32',
   asar: true,
   dir: path.join(__dirname, '../'),
   icon: path.join(__dirname, '../build/icons/icon'),

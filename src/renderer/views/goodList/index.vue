@@ -26,13 +26,16 @@
             </el-table-column>
             <el-table-column align='center' prop="good_price" label="当前价格">
             </el-table-column>
-            <el-table-column align='center'  label="操作" width='300'>
+            <el-table-column align='center'  label="操作" width='400'>
               <template slot-scope="scope">
                   <el-button type="primary" size="small" @click="getPriceCurve(scope.row.good_id)"
                             icon="el-icon-zoom-in" >历史价格曲线
                   </el-button>
                   <el-button type="success" size="small" @click="getGoordDetail(scope.row)"
                             icon="el-icon-zoom-in" >查看/修改 详情
+                  </el-button>
+                  <el-button type="danger" size="small" @click="deleteGood(scope.row.good_id)"
+                            icon="el-icon-delete" >删除
                   </el-button>
               </template>
             </el-table-column>
@@ -57,19 +60,19 @@
                         <el-input v-model="goodInfo.good_name"  ></el-input>                        
                     </el-form-item>
                     <el-form-item label="商品价格：" prop="good_price">
-                        <el-input v-model.number="goodInfo.good_price" placeholder="电话" required></el-input>
+                        <el-input v-model.number="goodInfo.good_price" placeholder="商品价格" required></el-input>
                     </el-form-item>
                     <el-form-item label="商品库存：" prop="good_stock">
                         <el-input type="text" v-model="goodInfo.good_stock"  required></el-input>
                     </el-form-item>
                     <el-form-item label="供应商：" prop="good_supplier">
-                        <el-input type="text" v-model="goodInfo.good_supplier" placeholder="密码" required></el-input>
+                        <el-input type="text" v-model="goodInfo.good_supplier" placeholder="供应商" required></el-input>
                     </el-form-item>
                     <el-form-item label="库存警告值：" prop="instock_price">
-                        <el-input type="text" v-model="goodInfo.instock_price"  auto-complete="off"></el-input>
+                        <el-input type="text" v-model="goodInfo.instock_price"  ></el-input>
                     </el-form-item>
-                    <!-- <el-form-item label="分类：" prop="good_divide">
-                         <el-select v-model="goodInfo.good_divide" placeholder="请选择" @change='getList'>
+                    <el-form-item label="分类：" prop="good_divide">
+                         <el-select v-model="goodInfo.good_divide" placeholder="请选择" >
                               <el-option
                                 v-for="item in Types"
                                 :key="item.good_divide"
@@ -77,9 +80,9 @@
                                 :value="item.good_divide">
                               </el-option>
                             </el-select>
-                    </el-form-item> -->
+                    </el-form-item>
                     <el-form-item label="商品描述：" prop="good_describe">
-                          <el-input type="textarea" :rows="2" v-model="goodInfo.instock_price"  auto-complete="off"></el-input>
+                          <el-input type="textarea" :rows="2" v-model="goodInfo.good_describe"  auto-complete="off"></el-input>
                     </el-form-item>
                 </el-form>
           <span slot="footer" class="dialog-footer">
@@ -103,7 +106,7 @@
 <script>
     import PriceCurve from "./priceCurve";
     import {  fetchGoodType } from "@/api/stock";
-    import { fetchGoodList, getPriceCurve, editGoodInfo } from "@/api/good";
+    import { fetchGoodList, getPriceCurve, editGoodInfo, deleteGood } from "@/api/good";
     export default {
       name: 'goodCatalog',
       data() {
@@ -126,12 +129,9 @@
         PriceCurve
       },
       methods: {
-        editGood(target){
-
-        },
         getList(){
           this.goodList = [];
-          fetchGoodList({page:this.currentPage,size:this.size}).then(data => {
+          fetchGoodList({page:this.currentPage,size:this.size,type:this.type}).then(data => {
               this.goodList = data.goods;
               this.total_page = data.total;
            
@@ -149,16 +149,24 @@
           this.goodInfoVisible = true;
         },
         editGoodInfo(){
-          editGoodInfo(this.goodInfo).then( data=>{
-            if(data.status){
+          editGoodInfo({good:this.goodInfo}).then( data=>{
               this.goodInfoVisible = false;
               this.$message({
-                tyoe:'success',
+                type:'success',
                 message:'修改成功'
               })
-            }
           })
           
+        },
+        deleteGood(good_id){
+          deleteGood({good_id}).then(data=>{
+              this.$message({
+                type:'success',
+                message:'删除成功'
+              })
+            this.currentPage = 1;
+            this.getList();
+          })
         }
       },
       created(){

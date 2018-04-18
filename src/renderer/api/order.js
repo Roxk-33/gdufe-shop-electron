@@ -8,3 +8,17 @@ export function getOrderList(params) {
     params
   })
 }
+export function getOrderDetail(params) {
+  return request({
+    url: '/order/detail',
+    method: 'get',
+    params
+  })
+}
+export function deleteOrder(params) {
+  return request({
+    url: '/order/delete',
+    method: 'get',
+    params
+  })
+}

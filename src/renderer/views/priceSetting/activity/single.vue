@@ -68,7 +68,7 @@ export default {
             type: "number",
             required: true,
             message: "输入数字",
-            trigger: "change"
+            trigger: "blur"
           }
         ],
         discount: [
@@ -76,7 +76,7 @@ export default {
             type: "number",
             required: true,
             message: "输入数字",
-            trigger: "change"
+            trigger: "blur"
           }
         ]
       }

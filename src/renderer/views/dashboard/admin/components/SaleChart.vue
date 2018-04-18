@@ -80,16 +80,18 @@ export default {
       return date_arr;
       
     },
-    setOptions({ expectedData, actualData } = {}) {
+    setOptions({ profit, actualData, revenue } = {}) {
       this.chart.setOption({
-        title: {
-          text: '超市销售情况',
+        color:  ['#5793f3', '#d14a61', '#675bba'],
+
+        tooltip: {
+            trigger: 'none',
+            axisPointer: {
+                type: 'cross'
+            }
         },
-        xAxis: {
-          data: this.getDate(),
-          boundaryGap: false,
-          type: 'category',
-           
+        legend: {
+            data:['营业额', '利润']
         },
         grid: {
           left: 50,
@@ -105,31 +107,41 @@ export default {
           },
           padding: [5, 10]
         },
-        yAxis: {
-          axisTick: {
-            show: false
-          }
-        },
-        legend: {
-          data: ['营销额']
-        },
-        series: [{
-          name: '营销额', itemStyle: {
-            normal: {
-              color: '#FF005A',
-              lineStyle: {
-                color: '#FF005A',
-                width: 2
-              }
+        xAxis: 
+            {   
+              name:'时间',
+                type: 'category',
+                axisTick: {
+                    alignWithLabel: true
+                },
+                axisLine: {
+                    onZero: false,
+                    lineStyle: {
+                        color: '#5793f3'
+                    }
+                },
+                data: this.getDate()
+            },
+        yAxis: [
+            {   
+              name:'金额',
+                type: 'value'
             }
-          },
-          smooth: true,
-          type: 'line',
-          data: expectedData,
-          animationDuration: 2800,
-          animationEasing: 'cubicInOut'
-        }]
-      })
+        ],
+        series: [
+            {
+                name:'营业额',
+                type:'line',
+                smooth: true,
+                data: profit
+            },
+            {
+                name:'利润',
+                type:'line',
+                smooth: false,
+                data: revenue
+            },
+        ]})
     },
     initChart() {
       this.chart = echarts.init(this.$el, 'macarons')

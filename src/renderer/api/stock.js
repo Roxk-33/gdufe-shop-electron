@@ -1,6 +1,7 @@
 import request from '@/utils/request'
 
 
+
 export function fetchStockList(params) {
   return request({
     url:'/stock/inventory/list',
@@ -11,11 +12,12 @@ export function fetchStockList(params) {
 
 export function fetchLockList(params) {
   return request({
-    url:'/stock/lock/list',
+    url:'/stock/lack/list',
     method: 'get',
     params
   })
 }
+
 
 export function fetchGoodType() {
   return request({
@@ -44,6 +46,13 @@ export function getLossList(params) {
 export function getLossDetail(params) {
   return request({
     url: '/stock/loss/detail',
+    method: 'get',
+    params
+  })
+}
+export function deleteLoss(params) {
+  return request({
+    url: '/stock/loss/delete',
     method: 'get',
     params
   })

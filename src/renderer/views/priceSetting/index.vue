@@ -48,7 +48,7 @@ export default {
             type: "number",
             required: true,
             message: "输入数字",
-            trigger: "change"
+            trigger: "blur"
           }
         ],
         price: [
@@ -56,7 +56,7 @@ export default {
             type: "number",
             required: true,
             message: "输入数字",
-            trigger: "change"
+            trigger: "blur"
           }
         ]
       }

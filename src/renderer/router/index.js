@@ -32,18 +32,8 @@ export default new Router({
     routes: constantRouterMap
 })
 
-export const asyncRouterMap = [{
-        path: '/stock',
-        component: Layout,
-        redirect: 'noredirect',
-        name: 'stock',
-        meta:{
-            roles: ['stocker','manager','accountant']
-        },
-        children: [
-            { path: 'catalog', component: _import('stock/catalog/index'), name: 'catalog', meta: { title: 'catalogStock', noCache: true, icon: 'catalog' } },
-        ],
-    },
+export const asyncRouterMap = [
+    
     {
         path: '/sale',
         component: Layout,
@@ -56,18 +46,8 @@ export const asyncRouterMap = [{
             { path: 'index', component: _import('settleAccounts/index'), name: 'sale', meta: { title: 'settleAccounts', noCache: true, icon: 'sale'} },
         ],
     },
-    {
-        path: '/goodList',
-        component: Layout,
-        redirect: 'noredirect',
-        name: 'goodList',
-        meta:{
-            roles: ['manager']
-        },
-        children: [
-            { path: 'index', component: _import('goodList/index'), name: 'goodList', meta: { title: 'goodList', noCache: true, icon: 'catalog'} },
-        ],
-    },
+    
+   
     {
         path: '/orderList',
         component: Layout,
@@ -80,6 +60,39 @@ export const asyncRouterMap = [{
             { path: 'index', component: _import('orderList/index'), name: 'orderList', meta: { title: 'orderList', noCache: true, icon: 'catalog'} },
         ],
     },
+    {
+        path: '/vipList',
+        component: Layout,
+        redirect: 'noredirect',
+        meta: {
+            roles: ['manager', 'accountant']
+        },
+        children: [{
+            path: '',
+            component: _import('vip/catalog/index'),
+            name: 'vipList',
+            meta: {
+                title: 'vipList',
+                icon: 'catalog',
+            }
+        }],
+    },
+    {
+        path: '/stock',
+        component: Layout,
+        redirect: 'noredirect',
+        name: 'stock',
+        meta:{
+            title:'stockAdmin',
+            icon:'stockAdmin',
+            roles: ['stocker','manager','accountant']
+        },
+        children: [
+            { path: 'catalog', component: _import('stock/catalog/index'), name: 'catalog', meta: { title: 'catalogStock', noCache: true, icon: 'catalog' } },
+            { path: 'lack', component: _import('stock/lack/index'), name: 'catalog', meta: { title: 'lockStock', noCache: true, icon: 'catalog' } },
+        ],
+    },
+
     {
         path: '/account',
         component: Layout,
@@ -96,21 +109,20 @@ export const asyncRouterMap = [{
         ],
     },
     {
-        path: '/addGood',
+        path: '/goodList',
         component: Layout,
-        redirect: '/addGood/index',
-        meta: { roles: ['accountant'] }, // you can set roles in root nav    
-        children: [{
-            path: 'index',
-            component: _import('addGood/index'),
-            name: 'addGood',
-            meta: {
-                title: 'addGood',
-                icon: 'adjunction',
-            }
-        }],
+        redirect: 'noredirect',
+        name: 'goodList',
+        meta:{
+            icon:'goodAdmin',
+            title:'goodAdmin',
+            roles: ['manager']
+        },
+        children: [
+            { path: 'list', component: _import('goodList/index'), name: 'goodList', meta: { title: 'goodList', noCache: true, icon: 'catalog'} },            
+            { path: 'index', component: _import('addGood/index'), name: 'addGood',meta: { title: 'addGood', icon: 'adjunction'}},
+        ],
     },
-
     {
         path: '/purchaseListByadmin',
         component: Layout,
@@ -166,43 +178,36 @@ export const asyncRouterMap = [{
         component: Layout,
         redirect: 'noredirect',
         meta: {
-            
+            title: 'priceSettingAdmin',
+            icon: 'priceSetting',
             roles: ['manager', 'accountant']
         },
         children: [{
-            path: '',
+            path: 'setting',
             component: _import('priceSetting/index'),
             name: 'priceSetting',
             meta:{
                 title: 'priceSetting',
                 icon: 'priceSetting',
-            }
-        }],
+            }},
+            {
+                path: 'catalog',
+                component: _import('priceSetting/catalog/index'),
+                name: 'priceSettingList',
+                meta:{
+                    title: 'priceSettingList',
+                    icon: 'catalog',
+            }},
+        ],
     },
-    {
-        path: '/vipList',
-        component: Layout,
-        redirect: 'noredirect',
-        meta: {
-            roles: ['manager', 'accountant']
-        },
-        children: [{
-            path: '',
-            component: _import('vip/catalog/index'),
-            name: 'vipList',
-            meta: {
-                title: 'vipList',
-                icon: 'catalog',
-            }
-        }],
-    },
+
     {
         path: '/loss',
         component: Layout,
         redirect: 'noredirect',
         meta: {
             title: 'lossAdmin',
-            icon: 'management',
+            icon: 'lossAdmin',
         },
         children: [{
                 path: 'list',
@@ -212,7 +217,6 @@ export const asyncRouterMap = [{
                     title: 'lossList',
                     icon: 'catalog',
                     roles: ['stocker', 'accountant','manager']
-                    
                 }
             },
             {
@@ -223,7 +227,6 @@ export const asyncRouterMap = [{
                     title: 'lossAdd',
                     icon: 'adjunction',
                     roles: ['stocker', 'saler']
-                    
                 }
             },
 

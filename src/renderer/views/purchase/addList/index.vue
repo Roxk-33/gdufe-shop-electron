@@ -48,7 +48,7 @@
           </div>
         </div>
         <div class='btn-box'>
-          <el-button type="success" @click="postList"  >提交</el-button>
+          <el-button type="success" @click="postList"  :disabled="isEmpty">提交</el-button>
           <el-button type="danger" @click="Empty" :disabled="isEmpty">清空</el-button>
         </div>
     </div>
@@ -58,7 +58,7 @@
 
 <script>
 import { addList} from "@/api/purchase";
-import { fetchAjaxGood,fetchGood  } from "@/api/good";
+import { fetchAjaxGood,fetchGoodInfo  } from "@/api/good";
 import { validateTel } from '@/utils/validate.js'
 
 const defaultForm = {
@@ -95,7 +95,7 @@ export default {
             type: "number",
             required: true,
             message: "输入数字",
-            trigger: "change"
+            trigger: "blur"
           }
         ],
         purchaseNum: [
@@ -103,7 +103,7 @@ export default {
             type: "number",
             required: true,
             message: "输入数字",
-            trigger: "change"
+            trigger: "blur"
           }
         ]
       }
@@ -129,8 +129,8 @@ export default {
     pushGood() {
       this.$refs["postForm"].validate(valid => {
         if (valid) {
-
-          fetchGood(this.postForm).then(data => {
+          
+          fetchGoodInfo({goodId:this.postForm.goodId}).then(data => {
               this.postForm.goodName = data.info.good_name;
               this.postForm.goodId = data.info.good_id;
               this.goodList.push(this.postForm);
@@ -142,8 +142,6 @@ export default {
           }).catch(err => {
               this.loading = false;
           });
-
-        
         } 
       });
     },

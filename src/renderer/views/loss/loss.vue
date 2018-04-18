@@ -12,9 +12,9 @@
         </el-form-item>
         <el-form-item label="损耗类型" prop="lossCase">
             <el-select v-model="postForm.lossCase">
-                <el-option value="0">变质</el-option>
-                <el-option value="1">损坏</el-option>
-                <el-option value="2">过期</el-option>
+                <el-option value="0" label='变质'>变质</el-option>
+                <el-option value="1" label='损坏'>损坏</el-option>
+                <el-option value="2" label='过期'>过期</el-option>
             </el-select>
         </el-form-item>
         <el-form-item label="损耗数量" prop="lossNum">
@@ -58,7 +58,7 @@
 
 <script>
 import { addLossList } from "@/api/stock";
-import { fetchAjaxGood } from "@/api/good";
+import { fetchAjaxGood,fetchGoodInfo } from "@/api/good";
 
 const defaultForm = {
   goodId: "",
@@ -95,7 +95,7 @@ export default {
             type: "number",
             required: true,
             message: "输入数字",
-            trigger: "change"
+            trigger: "blur"
           }
         ],
         lossNum: [
@@ -103,7 +103,7 @@ export default {
             type: "number",
             required: true,
             message: "输入数字",
-            trigger: "change"
+            trigger: "blur"
           }
         ]
       }
@@ -117,9 +117,7 @@ export default {
          
       }else{
         fetchAjaxGood({target : query}).then( data =>{
-           if(data.status){
             cb(data.info);
-          }
        })
       }
     },
@@ -131,8 +129,8 @@ export default {
       this.$refs["postForm"].validate(valid => {
         if (valid) {
 
-          fetchAjaxGood({goodId : this.postForm.goodId}).then(data => {
-              this.postForm.goodName = data.info.goodName;
+          fetchGoodInfo({goodId : this.postForm.goodId}).then(data => {
+              this.postForm.goodName = data.info.good_name;
               this.goodList.push(this.postForm);
               this.postForm = Object.assign({}, defaultForm);
               this.$message({
@@ -168,8 +166,9 @@ export default {
       return this.goodList.length == 0
     }
   },
-  filter :{
+  filters :{
         statusFilter(status){
+          console.log(status);
             const arr = ['变质','损坏','过期'];
             return arr[status];
         }

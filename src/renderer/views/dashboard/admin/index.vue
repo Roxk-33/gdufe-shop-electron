@@ -11,6 +11,7 @@
           :show-all-levels="false"
           @change = 'handleSaleTimeSpan'
           placeholder="过往七天"
+          size='small'
       ></el-cascader>
       </div>
       
@@ -82,8 +83,9 @@ export default {
   data() {
     return {
       saleChartData: { 
-          expectedData: [100, 120, 161, 134, 105, 160, 170],
-          actualData: [120, 82, 91, 154, 162, 140, 170]
+        time:[],
+        revenue:[], 
+        profit:[]
       },
       goodChartData: { 
           expectedData: [100, 120, 161, 134, 105, 160, 170],
@@ -92,6 +94,7 @@ export default {
       chartData : {},
       sql:'',
       saleTimeSpan : 7,
+      saleTimeType : 'day',
       goodTimeSpan : 7,
       
       timeSpanOption : [
@@ -125,9 +128,11 @@ export default {
   },
   methods: {
     handleSetLineChartData(type) {
+    
       this.lineChartData = lineChartData[type]
     },
     handleSaleTimeSpan(saleTimeSpan){
+      this.saleTimeType = saleTimeSpan[0]
       this.saleTimeSpan = saleTimeSpan[1]
       this.saleChartData = {
             expectedData: [100, 120, 161, 134, 105, 160, 170,100, 120, 161, 134, 105, 160, 170],
@@ -141,7 +146,16 @@ export default {
             actualData: [120, 82, 91, 154, 162, 140, 170]
         }
     },
+    getSale(){
+      getSale({type:this.saleTimeType,span:this.saleTimeSpan}).then(data=>{
+        this.saleChartData = data.info;
+      })
+    }
   },
+
+  created(){
+    this.getSale();
+  }
  
 }
 </script>
@@ -160,5 +174,7 @@ export default {
     padding: 5 10px;
     margin: 10px;
   }
+  
 }
+
 </style>

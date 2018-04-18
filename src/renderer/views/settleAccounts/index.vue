@@ -24,19 +24,19 @@
     <div>
         <p class='shop-title'>添加商品</p>
         <el-form :inline="true" :model="postForm"  ref="postForm" :rules="rules" class="demo-form-inline">
-        <el-form-item label="商品编号" prop="goodId">
-            <el-autocomplete  style="width:300px" v-model.number="postForm.goodId" value-key='goodId' placeholder="商品编号"  required :fetch-suggestions="querySearchAsync" @select="handleSelect">
-               <template slot-scope="props" >
-                  <div class="name">商品名：{{ props.item.good_name }}</div>
-                </template>
-            </el-autocomplete>
-        </el-form-item>
-        <el-form-item label="购买数量" prop="goodNum">
-            <el-input-number v-model="postForm.goodNum" :min="1"  label="购买数量"></el-input-number>
-        </el-form-item>
-        <el-form-item >
-            <el-button type="primary" @click="pushCart()" style="width:100px;" v-loading="loading">添加</el-button>
-        </el-form-item>
+            <el-form-item label="商品编号" prop="goodId">
+                <el-autocomplete  style="width:300px" v-model.number="postForm.goodId" value-key='goodId' placeholder="商品编号"  required :fetch-suggestions="querySearchAsync" @select="handleSelect">
+                  <template slot-scope="props" >
+                      <div class="name">商品名：{{ props.item.good_name }}</div>
+                    </template>
+                </el-autocomplete>
+            </el-form-item>
+            <el-form-item label="购买数量" prop="goodNum">
+                <el-input-number v-model="postForm.goodNum" :min="1"  label="购买数量"></el-input-number>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" @click="pushCart()" style="width:100px;" v-loading="loading">添加</el-button>
+            </el-form-item>
         </el-form>
     </div>
     <div>
@@ -46,13 +46,13 @@
             </el-table-column>
             <el-table-column align='center' prop="goodId" label="商品编号" width="200" filter-placement="bottom-end" >
             </el-table-column>
-            <el-table-column align='center' prop="good_name" label="商品名" width="200" >
+            <el-table-column align='center' prop="goodName" label="商品名" width="200" >
             </el-table-column>
             <el-table-column align='center' prop="goodNum" label="数量" width="200">
             </el-table-column>
-            <el-table-column align='center' prop="good_price" label="单价" width="200">
+            <el-table-column align='center' prop="goodPrice" label="单价" width="200">
             </el-table-column>
-            <el-table-column align='center' prop="good_total" label="合计" width="200">
+            <el-table-column align='center' prop="totalPrice" label="合计" width="200">
             </el-table-column>
             <el-table-column align='center' label="操作">
               <template slot-scope="scope">
@@ -66,8 +66,8 @@
             <el-button type="danger" @click="emptyCart" style="display:inlne-block;" :disabled="isEmpty">清空</el-button>
         </el-card>
           <el-card class='cart-info price-info'>
-            <label>总价:{{TotalPrice}}</label>
-            <label v-if='discount > 0'>折扣:-{{discount}}</label>
+            <label>总价：{{TotalPrice}}</label>
+            <label >优惠：<strong style="font-size:20px;margin:0 3px;" v-if='discount'>-</strong>{{discount}}</label>
         </el-card>
         </div>
           
@@ -139,7 +139,7 @@ export default {
             type: "number",
             required: true,
             message: "输入数字",
-            trigger: "change"
+            trigger: "blur"
           }
         ],
         goodNum: [
@@ -147,7 +147,7 @@ export default {
             type: "number",
             required: true,
             message: "输入数字",
-            trigger: "change"
+            trigger: "blur"
           }
         ]
       }
@@ -177,11 +177,33 @@ export default {
         if (valid) {
           this.loading = true;
           pushCart({good:this.postForm, cart:this.cartList, discount:this.discount}).then(data => {
-              const {  info, discount ,status } = data;
+              const {   discount ,status } = data;
               if(status){
-                this.cartList = info;
+                this.postForm.goodPrice = data.info.good_price;
+                this.postForm.goodName = data.info.good_name;
+
+                this.postForm.totalPrice = this.postForm.goodPrice * this.postForm.goodNum;
+
+
+                this.cartList.push(this.postForm);
+                this.postForm = Object.assign({}, defaultForm);
                 this.discount = discount;
                 this.loading = false;
+
+                this.cartList.forEach( (good,index1)=>{
+                  let goodId = good.goodId;
+
+                  this.cartList = this.cartList.filter((other,index2) =>{
+
+                      if(other.goodId === goodId && index1 !== index2){
+                        this.cartList[index1].goodNum +=this.cartList[index2].goodNum;
+                        this.cartList[index1].totalPrice +=this.cartList[index2].totalPrice;
+                        return false;
+                      }
+                      return true;
+                  })
+                })
+                console.log(this.cartList);
               }
             })
             .catch(err => {
@@ -243,7 +265,7 @@ export default {
     TotalPrice(){
         let temp = 0;
         this.cartList.forEach(element => {
-          temp =  temp + element.good_total;
+          temp =  temp + element.totalPrice;
         });
         return temp;
     },

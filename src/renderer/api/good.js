@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-export function fetchGood(params) {
+export function fetchGoodInfo(params) {
   return request({
     url:'/good/info',
     method: 'get',
@@ -10,6 +10,13 @@ export function fetchGood(params) {
 export function fetchGoodList(params) {
   return request({
     url:'/good/list',
+    method: 'get',
+    params
+  })
+}
+export function deleteGood(params) {
+  return request({
+    url:'/good/delete',
     method: 'get',
     params
   })
@@ -43,6 +50,27 @@ export function updateGoodPriceSingle(data) {
     data
   })
 }
+export function getGoodPriceList(params) {
+  return request({
+    url: '/good/priceSetting/list',
+    method: 'get',
+    params
+  })
+}
+export function deleteGoodPriceSetting(params) {
+  return request({
+    url: '/good/priceSetting/delete',
+    method: 'get',
+    params
+  })
+}
+export function getGoodPriceDetail(params) {
+  return request({
+    url: '/good/priceSetting/detail',
+    method: 'get',
+    params
+  })
+}
 export function getPriceCurve(params) {
   return request({
     url: '/good/priceCurve',
@@ -50,6 +78,7 @@ export function getPriceCurve(params) {
     params
   })
 }
+
 export function editGoodInfo(data) {
   return request({
     url: '/good/modifyInfo',

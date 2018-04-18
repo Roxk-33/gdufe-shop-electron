@@ -2,9 +2,9 @@
   <div class="shop-container">
 
     <p class='shop-title'>会员列表</p>
-  <el-button icon='el-icon-refresh' @click="getList" style="margin:5px" type='success '></el-button>
+        <el-button icon='el-icon-refresh' @click="getList" style="margin:5px" type='success '></el-button>
         
-        <el-table border   :data="vipList"  highlight-current-row style="width: 90%; margin:50px auto;">
+        <el-table border   :data="vipList"  highlight-current-row style="width: 90%; margin:20px auto;">
             
             <el-table-column align='center' type="index" label="序号" >
             </el-table-column>

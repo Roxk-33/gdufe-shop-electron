@@ -58,8 +58,8 @@
             </el-table>
       </div>
       <span slot="footer" class="dialog-footer">
-          <el-button @click="orderDialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="sumbitOrder()">确 认</el-button>
+          <el-button @click="orderDialogVisible = false">关 闭</el-button>
+          <el-button type="primary" @click="sumbitOrder()">提 交</el-button>
       </span>
   </el-dialog>
 </div>
