@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard-editor-container">
 
-    <panel-group  :sale-data='saleToday' :order-data='orderToday'></panel-group>
+    <panel-group  :sale-data='saleToday' :order-data='orderToday' :stock-warm='stockWarm'></panel-group>
 
      <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
 
@@ -48,11 +48,11 @@
       </div>
       <good-chart :chart-data="goodChartData"></good-chart>
     </el-row>
-    <el-row :gutter="8">
+    <!-- <el-row :gutter="8">
       <el-col :xs="{span: 12}" :sm="{span: 12}" :md="{span: 12}" :lg="{span: 6}" :xl="{span: 5}">
         <box-card></box-card>
       </el-col>
-    </el-row>
+    </el-row> -->
 
   </div>
 </template>
@@ -62,8 +62,9 @@ import PanelGroup from './components/PanelGroup'
 import SaleChart from './components/SaleChart'
 import GoodChart from './components/GoodChart'
 import BoxCard from './components/BoxCard'
-import {  fetchGoodType } from "@/api/stock";
+import {  fetchGoodType, fetchLockList } from "@/api/stock";
 import { getSale, getGood} from '@/api/statistics'
+
 
 export default {
   name: 'dashboard-admin',
@@ -112,6 +113,8 @@ export default {
           goodName:[]
       },
       saleToday:0,
+      orderToday:0,
+      stockWarm:0,
       saleTimeSpan : [],
       saleTimeType : 'week',
       goodTimeSpan : 7,
@@ -168,6 +171,7 @@ export default {
       getSale({type:this.saleTimeType,span:this.saleTimeSpan}).then(data=>{
         this.saleChartData.time = data.info.time;
         this.saleChartData.revenue = data.info.revenue;
+      
         this.saleChartData.profit = data.info.profit;
         this.saleToday = data.info.all;
         this.orderToday = data.info.orders;
@@ -182,11 +186,17 @@ export default {
 
       })
     },
+    getStock(){
+      fetchLockList({page:1,size:20}).then(data=>{
+        this.stockWarm = data.total
+      })
+    }
   },
 
   created(){
     this.getSale();
     this.getGood();
+    this.getStock();
     this.fetchGoodType();
   }
  

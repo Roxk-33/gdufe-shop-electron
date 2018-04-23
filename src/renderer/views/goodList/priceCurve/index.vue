@@ -64,11 +64,10 @@ export default {
       }
     }
   },
-  created(){
-    this.getDate();
-  },
+  
   methods: {
     getDate(timeArr){
+      console.log(timeArr);
       let date_arr = [];
       for (let i = 0; i < timeArr.length; i++) {
         const date = new Date(timeArr[i] );
@@ -104,6 +103,9 @@ export default {
         yAxis: {
           axisTick: {
             show: false
+          },
+          max:function(value){
+            return parseInt(value.max + value.max/2)
           }
         },
         legend: {

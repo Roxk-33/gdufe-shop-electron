@@ -44,11 +44,11 @@
         <el-table border :data="cartList" v-loading="listLoading"  class='goodsList'>
             <el-table-column align='center' type="index" label="序号" width="70">
             </el-table-column>
-            <el-table-column align='center' prop="goodId" label="商品编号" width="200" filter-placement="bottom-end" >
+            <el-table-column align='center' prop="goodId" label="商品编号" width="100" filter-placement="bottom-end" >
             </el-table-column>
             <el-table-column align='center' prop="goodName" label="商品名" width="200" >
             </el-table-column>
-            <el-table-column align='center' prop="goodNum" label="数量" width="200">
+            <el-table-column align='center' prop="goodNum" label="数量" width="100">
               <template slot-scope="scope">
                 <div class='el-input-number el-input-number--mini'>
                   <span role="button" class="el-input-number__decrease" @click="changeGoodNum(scope.row, 0)"><i class="el-icon-minus"></i></span>
@@ -59,9 +59,9 @@
                 </div>
               </template>
             </el-table-column>
-            <el-table-column align='center' prop="goodPrice" label="单价" width="200">
+            <el-table-column align='center' prop="goodPrice" label="单价" width="100">
             </el-table-column>
-            <el-table-column align='center' prop="totalPrice" label="合计" width="200">
+            <el-table-column align='center' prop="totalPrice" label="合计" width="100">
             </el-table-column>
             <el-table-column align='center' label="操作">
               <template slot-scope="scope">

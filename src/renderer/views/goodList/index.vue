@@ -167,8 +167,7 @@
         },
         getPriceCurve(id){
           getPriceCurve({goodId:id}).then(data=>{
-            this.curveData.time = data.time;
-            this.curveData.price = data.price;
+            this.curveData  = data ;
             this.dialogVisiblePrice = true;
           })
         },

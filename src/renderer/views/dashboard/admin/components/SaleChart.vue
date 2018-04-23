@@ -105,13 +105,18 @@ export default {
             {   
               name:'营业额',
               position: 'left',
-              type: 'value'
+              type: 'value',
+              max: function (value) {
+                return value.max + 1000;
+              }
             },
             {
             type: 'value',
             name: '利润',
             min: 0,
-            // max: 250,
+            max: function (value) {
+                return value.max + 1000;
+            },
             position: 'right',
             axisLine: {
                 lineStyle: {
@@ -133,6 +138,7 @@ export default {
             {
                 name:'利润',
                 type:'line',
+                yAxisIndex: 1,
                 smooth: false,
                 data: profit
             },

@@ -92,7 +92,8 @@ export default {
             {
                 name:'销售数量',
                 type:'bar',
-                barWidth: '60%',
+                barWidth: '30%',
+                barMaxWidth:'100px',
                 data:goodNum
             }
         ]

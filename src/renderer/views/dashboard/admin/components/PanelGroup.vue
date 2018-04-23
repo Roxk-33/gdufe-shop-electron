@@ -24,6 +24,18 @@
       </div>
       
     </el-col>
+    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
+      <div class="card-panel" >
+        <div class="card-panel-icon-wrapper icon-stockCard">
+          <svg-icon name="good" class="card-panel-icon" scale="6" />
+        </div>
+        <div class="card-panel-description">
+          <div class="card-panel-text">商品库存不足数</div>
+          <count-to class="card-panel-num" :startVal="0" :endVal="stockWarm" :duration="4600"></count-to>
+        </div>
+      </div>
+      
+    </el-col>
   </el-row>
 </template>
 
@@ -40,6 +52,10 @@ export default {
       default: 0
     },
     orderData:{
+      type: Number,
+      default: 0
+    },
+    stockWarm:{
       type: Number,
       default: 0
     },
@@ -73,7 +89,7 @@ export default {
     .icon-orderCard {
       color: #36a3f7;
     }
-    .icon-money {
+    .icon-stockCard {
       color: #f4516c;
     }
     .icon-shoppingCard {
