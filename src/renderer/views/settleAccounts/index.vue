@@ -25,7 +25,7 @@
         <p class='shop-title'>添加商品</p>
         <el-form :inline="true" :model="postForm"  ref="postForm" :rules="rules" class="demo-form-inline">
             <el-form-item label="商品编号" prop="goodId">
-                <el-autocomplete  style="width:300px" v-model.number="postForm.goodId" value-key='goodId' placeholder="商品编号"  required :fetch-suggestions="querySearchAsync" @select="handleSelect">
+                <el-autocomplete  style="width:300px" v-model="postForm.goodId" value-key='goodId' placeholder="商品编号"  required :fetch-suggestions="querySearchAsync" @select="handleSelect">
                   <template slot-scope="props" >
                       <div class="name">商品名：{{ props.item.good_name }}</div>
                     </template>
@@ -49,6 +49,15 @@
             <el-table-column align='center' prop="goodName" label="商品名" width="200" >
             </el-table-column>
             <el-table-column align='center' prop="goodNum" label="数量" width="200">
+              <template slot-scope="scope">
+                <div class='el-input-number el-input-number--mini'>
+                  <span role="button" class="el-input-number__decrease" @click="changeGoodNum(scope.row, 0)"><i class="el-icon-minus"></i></span>
+                  <span role="button" class="el-input-number__increase" @click="changeGoodNum(scope.row, 1)"><i class="el-icon-plus"></i></span>
+                  <div class='el-input el-input--mini'>
+                    <input type='text' class='el-input__inner' v-model="scope.row.goodNum">
+                  </div>
+                </div>
+              </template>
             </el-table-column>
             <el-table-column align='center' prop="goodPrice" label="单价" width="200">
             </el-table-column>
@@ -78,7 +87,7 @@
       <div class='pay-box'>
           <div class='pay-box-item'>
             <span>应收款：</span>
-            <el-input v-model="TotalPrice" readonly></el-input>
+            <el-input v-model="cleanPrice" readonly></el-input>
           </div>
           <div class='pay-box-item'>
             <span>实收款：</span>
@@ -99,9 +108,9 @@
 </template>
 
 <script>
-import { cleanCart,  checkVip, pushCart} from "@/api/front";
+import { cleanCart,  checkVip, updateCart} from "@/api/front";
 import { validateTel } from '@/utils/validate.js'
-import { fetchAjaxGood } from "@/api/good";
+import { fetchAjaxGood, fetchGoodInfo } from "@/api/good";
 
 const defaultForm = {
   goodId: "",
@@ -109,6 +118,32 @@ const defaultForm = {
 };
 export default {
   name: "settleAccounts",
+  computed:{
+    TotalPrice(){
+        let temp = 0;
+        this.cartList.forEach(element => {
+          temp =  temp + element.totalPrice;
+        });
+
+        return temp;
+    },
+    cleanPrice(){
+       return (this.TotalPrice - this.discount)
+    },
+    isEmpty(){
+      return this.cartList.length == 0;
+    },
+    ChangeMoney(){
+      return (this.pay - this.cleanPrice).toFixed(1); 
+    },
+    isEnough(){
+      return this.pay >= this.cleanPrice || this.pay == 0
+    },
+    isNumber(){
+      return !(isNaN(this.pay))
+    }
+
+  },
   data() {
     const validateRequire = (rule, value, callback) => {
       if (value === "") {
@@ -117,6 +152,16 @@ export default {
           type: "error"
         });
         callback(null);
+      } else {
+        callback();
+      }
+    };
+
+    const validateNumber = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error('请输入数字值'));
+      }else if (!Number.isInteger(parseInt(value))) {
+            callback(new Error('请输入数字值'));
       } else {
         callback();
       }
@@ -134,15 +179,10 @@ export default {
       dialogVisible: false,
       pay : 0,
       vipNo:'',
-      searchType : '1',
+      searchType : '0',
       rules: {
-        goodId: [
-          {
-            type: "number",
-            required: true,
-            message: "输入数字",
-            trigger: "blur"
-          }
+        goodId:[
+            { validator: validateNumber, trigger: 'blur' }
         ],
         goodNum: [
           {
@@ -155,12 +195,14 @@ export default {
       }
     };
   },
+
   methods: {
 
     querySearchAsync(query, cb) {
-      if(query === ''|| query === undefined){
-         cb();
-         
+
+      if(query == ''|| query === undefined){
+        cb([])
+       
       }else{
         fetchAjaxGood({target : query}).then( data =>{
            if(data.status){
@@ -173,49 +215,56 @@ export default {
     handleSelect(item) {
         this.postForm.goodId = parseInt(item.good_id);
     },
+    updateCart(data, goodNumber) {
+        let goodInfo = {};
+        goodInfo.goodPrice = data.info.good_price;
+        goodInfo.goodName = data.info.good_name;
+        goodInfo.goodId = data.info.good_id;
+        goodInfo.goodNum = goodNumber;
+        goodInfo.totalPrice = goodInfo.goodPrice * goodInfo.goodNum;
 
+        this.cartList.push(goodInfo);
+        this.discount = data.discount;
+
+        this.cartList.forEach((good, index1) => {
+            let goodId = good.goodId;
+
+            this.cartList = this.cartList.filter((other, index2) => {
+
+                if (other.goodId === goodId && index1 !== index2) {
+                    this.cartList[index1].goodNum += this.cartList[index2].goodNum;
+                    this.cartList[index1].totalPrice += this.cartList[index2].totalPrice;
+                    return false;
+                }
+                return true;
+            })
+        })
+    },
     pushCart() {
       this.$refs["postForm"].validate(valid => {
         if (valid) {
           this.loading = true;
-          pushCart({good:this.postForm, cart:this.cartList, discount:this.discount}).then(data => {
-              const {   discount ,status } = data;
-              if(status){
-                this.postForm.goodPrice = data.info.good_price;
-                this.postForm.goodName = data.info.good_name;
+          fetchGoodInfo({goodId:this.postForm.goodId}).then(data =>{
 
-                this.postForm.totalPrice = this.postForm.goodPrice * this.postForm.goodNum;
-
-                this.cartList.push(this.postForm);
-                this.postForm = Object.assign({}, defaultForm);
-                this.discount = discount;
-                this.loading = false;
-
-                this.cartList.forEach( (good,index1)=>{
-                  let goodId = good.goodId;
-
-                  this.cartList = this.cartList.filter((other,index2) =>{
-
-                      if(other.goodId === goodId && index1 !== index2){
-                        this.cartList[index1].goodNum +=this.cartList[index2].goodNum;
-                        this.cartList[index1].totalPrice +=this.cartList[index2].totalPrice;
-                        return false;
-                      }
-                      return true;
-                  })
-                })
-                console.log(this.cartList);
+              if(data.good_stock < this.postForm.goodNum){
+                this.$message({
+                    message: '库存不足！该商品仅剩'+data.good_stock+'件',
+                    type: "warning"
+                });
+                this.loading = false;              
+                return;
               }
-            })
-            .catch(err => {
+              this.updateCart(data, this.postForm.goodNum)
+              this.loading = false;
+          }) .catch(err => {
               this.loading = false;
             });
-        } else {
-        }
+         
+        } 
       });
     },
     Clearing() {
-      cleanCart({order:this.cartList, userId:this.vipInfo.userId || '', pay:this.pay, discount : this.discount}).then( data =>{
+      cleanCart({order:this.cartList, userId:this.vipInfo.userId || '', pay:this.pay, discount : this.discount,totalPrice:this.cleanPrice}).then( data =>{
         
         this.$notify({
           title: '成功',
@@ -255,35 +304,46 @@ export default {
           this.showVip = !this.showVip;
           this.vipInfo = data.info
       })
+    },
+    changeGoodNum(target, type){
+      let goodNum = 0;
+      if(type){
+        goodNum = target.goodNum + 1;
+      }else if(target.goodNum > 1){
+        goodNum = target.goodNum - 1; 
+      }else {
+        return;
+      }
+
+      fetchGoodInfo({ goodId: target.goodId }).then(data => {
+
+          if (data.good_stock < goodNum) {
+              this.$message({
+                  message: '库存不足！该商品仅剩' + data.good_stock + '件',
+                  type: "warning"
+              });
+              return;
+          }
+          target.goodNum = goodNum;
+          target.totalPrice = target.goodPrice * target.goodNum;
+      });
+
     }
   },
   watch:{
     searchType(){
       this.vipNo = '';
+    },
+    cartList: {
+      deep: true,
+      handler(val) {
+        updateCart({cartList:this.cartList}).then(data=>{
+          this.discount = data.discount;
+        })
+      }
     }
-  },
-  computed:{
-    TotalPrice(){
-        let temp = 0;
-        this.cartList.forEach(element => {
-          temp =  temp + element.totalPrice;
-        });
-        return temp;
-    },
-    isEmpty(){
-      return this.cartList.length == 0;
-    },
-    ChangeMoney(){
-      return (this.pay - this.TotalPrice).toFixed(1); 
-    },
-    isEnough(){
-      return this.pay >= this.TotalPrice || this.pay == 0
-    },
-    isNumber(){
-      return !(isNaN(this.pay))
-    }
-
   }
+  
 };
 </script>
 

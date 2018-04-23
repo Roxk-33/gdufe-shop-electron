@@ -3,7 +3,7 @@
 
     <p class='shop-title'>缺货商品列表</p>
         <div class='stock-select-box'>
-            <el-button icon='el-icon-refresh' @click="getList" style="margin:5px" type='success '></el-button>
+            <el-button icon='el-icon-refresh'  title='刷新' @click="getList" style="margin:5px" type='success '></el-button>
         </div>
         
         <el-table border   :data="goodList"  highlight-current-row style="width: 90%; margin:20px auto;">

@@ -1,12 +1,13 @@
 <template>
-<div>
-  <el-button icon='el-icon-refresh'  title='刷新' @click="getList" style="margin:5px" type='success '></el-button>
+<div class='shop-container'>
 
+  <p class='shop-title'>采购列表</p>
+  <el-button icon='el-icon-refresh'  title='刷新' @click="getList" style="margin:5px" type='success '></el-button>
+  
   <el-table :data="list" border fit highlight-current-row style="width: 100%">
 
-    <el-table-column align="center" label="序号"   type='index' width="60">
-    </el-table-column>
-    <el-table-column  align="center" label="发布时间" prop="time">
+    <el-table-column type="index" width="50" label="序号"></el-table-column>
+    <el-table-column  align="center" label="发布时间">
       <template slot-scope="scope">
         {{scope.row.create_time | TimeConversion}}
       </template>
@@ -14,8 +15,8 @@
 
     <el-table-column  align="center" label="重要性">
       <template slot-scope="scope">
-        <el-rate v-model="scope.row.importance" disabled :colors="['#99A9BF', '#E6A23C', '#F56C6C']"   ></el-rate>
-       </template>
+            <el-rate v-model="scope.row.importance" disabled :colors="['#99A9BF', '#E6A23C', '#F56C6C']"   disabled-void-color ='transparent'></el-rate>
+    </template>
     </el-table-column>
 
     <el-table-column align="center" class-name="status-col" label="状态" >
@@ -25,13 +26,12 @@
     </el-table-column>
     <el-table-column align="center" class-name="status-col" label="操作" >
       <template slot-scope="scope">
-          <el-button type="primary"  @click="getOrderDetail(scope.row.purchase_id)" >查看</el-button>        
-          <el-button type="danger"  @click="DeleteList(scope.row.purchase_id)" icon="el-icon-delete">删除</el-button>
+          <el-button type="primary"  @click="getOrderDetail(scope.row.purchase_id)" :disabled="scope.row.purchase_status == 1">采购</el-button>
       </template>
     </el-table-column>
 
   </el-table>
-    <div class="pagination">
+  <div class="pagination">
           <el-pagination
             @current-change="getList"
             :current-page.sync="currentPage"
@@ -40,10 +40,10 @@
             :total="total_page">
           </el-pagination>
   </div>
-  <el-dialog title="采购商品" :visible.sync="orderDialogVisible" width="70%">
+  <el-dialog title="采购清单详情" :visible.sync="orderDialogVisible" width="1200px" >
       <div>
            <el-table :data="orderDetail" border fit highlight-current-row style="width: 100%">
-              <el-table-column align="center" label="序号"   type="index" width='100'></el-table-column>
+              <el-table-column align="center" label="序号"    type="index" width='100'></el-table-column>
               <el-table-column align="center" label="名称" prop="good_name"></el-table-column>
               <el-table-column align="center" class-name="status-col" label="采购数量" prop="purchase_number"> </el-table-column>
               <el-table-column align="center" class-name="status-col" label="状态">
@@ -51,10 +51,17 @@
                     <el-tag :type="scope.row.purchase_status | statusFilter_2">{{scope.row.purchase_status | purchaseFilter}}</el-tag>
                 </template>
               </el-table-column>
+              <el-table-column align="center" class-name="status-col" label="操作" >
+                <template slot-scope="scope">
+                    <el-button type="primary" @click="changeGoodStatus(scope.$index,1)" :disabled="scope.row.purchase_status == 1">已采购</el-button>
+                    <el-button type="danger" @click="changeGoodStatus(scope.$index,2)" :disabled="scope.row.purchase_status == 2">缺货</el-button>
+                </template>
+              </el-table-column>
             </el-table>
       </div>
       <span slot="footer" class="dialog-footer">
-          <el-button type="primary"  @click="orderDialogVisible = false">确 定</el-button>
+          <el-button @click="orderDialogVisible = false">关 闭</el-button>
+          <el-button type="primary" @click="sumbitOrder()">提 交</el-button>
       </span>
   </el-dialog>
 </div>
@@ -62,17 +69,13 @@
 </template>
 
 <script>
-import { fetchList , delList, fetchListDetail} from '@/api/purchase'
+import { fetchList ,fetchListDetail, updateList} from '@/api/purchase'
 
 export default {
-  props: {
-    type: {
-      type: String,
-      default: 'all'
-    }
-  },
+  
   data() {
     return {
+      type : 'not',
       orderDialogVisible: false,
       list: null,
       orderDetail : null,
@@ -103,24 +106,16 @@ export default {
       return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`
     }
   },
-  
+  created() {
+    this.getList();
+  },
   methods: {
     getList() {
       this.loading = true
-      fetchList({page:this.currentPage,size:this.size,type:this.type}).then( data => {
+      fetchList({page:this.currentPage,size:this.size,type:'not'}).then( data => {
         this.list = data.info;
-        this.total_page = data.total;
+        this.total_page = data.total;        
         this.loading = false;
-      })
-    },
-    DeleteList(id){
-      delList({id}).then( data =>{
-        
-          this.$message({
-            message: '删除成功',
-            type: "success"
-          });
-          this.getList();
       })
     },
     getOrderDetail(id){
@@ -128,18 +123,33 @@ export default {
           this.orderDialogVisible = true;
           this.orderDetail = data.info;
       })
+    },
+    changeGoodStatus(index,status){
+      this.orderDetail[index].purchase_status = status;
+    },
+    sumbitOrder(){
+      
+      updateList({list : this.orderDetail}).then( data =>{
+        if (data.status) {
+          this.orderDialogVisible = false;
+          this.orderDetail = null;
+          this.getList();
+        }else {
+          this.orderDialogVisible = false;
+          this.orderDetail = null;
+        }
+      })
     }
-  },
-  created() {
-    this.getList();
   }
 }
 </script>
 <style scoped>
-.pagination{
-  float: right;
-  margin-top: 10px;
+.purchase-container{
+    margin: 30px;
+  
 }
+.pagination{
+    float: right;
+  }
 </style>
-
 

@@ -5,7 +5,7 @@
         <router-link to="/account/addAccount" >
             <el-button icon='el-icon-plus' type="primary" round style='margin:20px 10px;'>添加账户</el-button>
         </router-link>
-  <el-button icon='el-icon-refresh' @click="getList" style="margin:5px" type='success '></el-button>
+  <el-button icon='el-icon-refresh'  title='刷新' @click="getList" style="margin:5px" type='success '></el-button>
         
         <el-table border :data="AccountList" v-loading="listLoading"  class='goodsList'>
             <el-table-column align='center' type="index" label="序号" width="70">

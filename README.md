@@ -1,6 +1,8 @@
 # gdufe-shop
 
-> An electron-vue project
+> 软件工程课程设计作业  
+   技术栈：electron + vue + java
+  
 
 #### Build Setup
 
@@ -11,8 +13,6 @@ npm install
 # serve with hot reload at localhost:9080
 npm run dev
 
-# build electron application for production
-npm run build
 
 
 ```

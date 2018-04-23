@@ -2,9 +2,9 @@
   <div class="shop-container">
 
     <p class='shop-title'>会员列表</p>
-        <el-button icon='el-icon-refresh' @click="getList" style="margin:5px" type='success '></el-button>
+        <el-button icon='el-icon-refresh'  title='刷新' @click="getList" style="margin:5px" type='success '></el-button>
         
-        <el-table border   :data="vipList"  highlight-current-row style="width: 90%; margin:20px auto;">
+        <el-table border  v-loading='isLoading' :data="vipList"  highlight-current-row style="width: 90%; margin:20px auto;">
             
             <el-table-column align='center' type="index" label="序号" >
             </el-table-column>
@@ -57,6 +57,7 @@
         return {
           vipList:[],
           loading: false,
+          isLoading:false,
           currentPage:1,
           size:20,
           total_page : 100,
@@ -67,11 +68,15 @@
       methods: {
        
         getList(){
-          
+          this.isLoading = true;
           fetchVipList({page:this.currentPage,size:this.size}).then(data => {
               this.vipList = data.info;
               this.total_page = data.total;
+              this.isLoading = false;
            
+          }).catch((err) => {
+              this.isLoading = false;
+              this.vipList = [];
           })
         },
         DeleteVip(id){
@@ -84,9 +89,9 @@
           })
         }
       },
-      filter:{
+      filters:{
         TimeConversion(time){
-          const date = new Date(time *1000);
+          const date = new Date(parseInt(time));
           return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`
         }
       },

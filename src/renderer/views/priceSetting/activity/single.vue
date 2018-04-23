@@ -1,6 +1,9 @@
 <template>
 <div style="margin:10px auto;  width:100%;">
         <el-form  :model="postForm"  ref="postForm" :rules="rules" label-width="100px" style="" class='formGood'>
+         <el-form-item label="活动名称" prop="name" style="width:300px">
+            <el-input v-model="postForm.name"   label="名称" ></el-input>
+        </el-form-item>
         <el-form-item label="商品编号" prop="goodId" style="width:500px">
             <el-autocomplete  style="width:200px" v-model.number="postForm.goodId" value-key='goodName' placeholder="商品编号"  required :fetch-suggestions="querySearchAsync" @select="handleSelect">
                <template slot-scope="props">
@@ -114,7 +117,8 @@ export default {
             });
             this.postForm = {
                 goodId: "",
-                discount: 0
+                discount: 0,
+                name:''
             };
             this.showBox = false;
             

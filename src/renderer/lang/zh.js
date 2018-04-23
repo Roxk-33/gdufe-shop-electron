@@ -14,6 +14,7 @@ export default {
     addGood:'添加商品信息',
     goodAdmin:'商品管理',
     stockAdmin:'库存管理',
+    recordStock:'入库记录',
     lockStock:'缺货商品',
     purchaseList:'采购清单',
     addPurchase:'新增采购清单',

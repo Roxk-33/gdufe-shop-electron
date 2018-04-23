@@ -47,6 +47,7 @@ export default {
     this.chart.dispose()
     this.chart = null
   },
+  
   watch: {
     chartData: {
       deep: true,
@@ -98,26 +99,42 @@ export default {
                         color: '#5793f3'
                     }
                 },
-                data: time.reverse()
+                data: time
             },
         yAxis: [
             {   
-              name:'金额',
-                type: 'value'
+              name:'营业额',
+              position: 'left',
+              type: 'value'
+            },
+            {
+            type: 'value',
+            name: '利润',
+            min: 0,
+            // max: 250,
+            position: 'right',
+            axisLine: {
+                lineStyle: {
+                    color: '#d14a61'
+                }
+            },
+            axisLabel: {
+                formatter: '{value} '
             }
+        },
         ],
         series: [
             {
                 name:'营业额',
                 type:'line',
                 smooth: true,
-                data: profit.reverse()
+                data: revenue
             },
             {
                 name:'利润',
                 type:'line',
                 smooth: false,
-                data: revenue.reverse()
+                data: profit
             },
         ]})
     },

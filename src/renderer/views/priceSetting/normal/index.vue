@@ -99,19 +99,16 @@ export default {
     },
 
     updatePrice() {
-      delete this.postForm.goodName;
-      delete this.postForm.goodPrice;
       updateGoodPrice(this.postForm).then( data =>{
           
             this.$message({
                 message: "设置成功",
                 type: "success"
             });
-            this.postForm = {
-                goodId: "",
-                price: 0
-            };
             this.showBox = false;
+            this.postForm.goodPrice = this.postForm.price;
+            this.showBox = true;
+
             
       })
     },

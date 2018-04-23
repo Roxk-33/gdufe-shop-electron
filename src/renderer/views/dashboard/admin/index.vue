@@ -1,24 +1,25 @@
 <template>
   <div class="dashboard-editor-container">
 
-    <!-- <panel-group @handleSetLineChartData="handleSetLineChartData"></panel-group> -->
+    <panel-group  :sale-data='saleToday' :order-data='orderToday'></panel-group>
 
-    <!-- <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
+     <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
 
       <div class="box-card">
         时间范围：
        
-        <el-date-picker v-model="saleTimeSpan" type="daterange" align="right" readonly unlink-panels range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2" value-format='timestamp'>
-        </el-date-picker>
+        <!-- <el-date-picker v-model="saleTimeSpan" type="daterange" align="right" readonly unlink-panels range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2" value-format='timestamp'>
+        </el-date-picker> -->
 
         <el-select v-model="saleTimeType" @change="getSale">
           <el-option label="过去一周" value="week">过去一周</el-option>
           <el-option label="过去一月" value="month">过去一月</el-option>
         </el-select>
+        
       </div>
       
       <sale-chart :chart-data="saleChartData"></sale-chart>
-    </el-row> -->
+    </el-row> 
     <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
       <div class="box-card">
         时间范围：
@@ -33,16 +34,25 @@
           <el-option label="过去一周" value="week">过去一周</el-option>
           <el-option label="过去一月" value="month">过去一月</el-option>
         </el-select>
+        </div>
+      <div class="box-card">
+        种类：
+          <el-select v-model="type" placeholder="请选择" @change='getGood'>
+            <el-option
+              v-for="item in Types"
+              :key="item.good_divide"
+              :label="item.good_divide"
+              :value="item.good_divide">
+            </el-option>
+          </el-select>
       </div>
       <good-chart :chart-data="goodChartData"></good-chart>
     </el-row>
-
-
-    <!-- <el-row :gutter="8">
+    <el-row :gutter="8">
       <el-col :xs="{span: 12}" :sm="{span: 12}" :md="{span: 12}" :lg="{span: 6}" :xl="{span: 5}">
         <box-card></box-card>
       </el-col>
-    </el-row> -->
+    </el-row>
 
   </div>
 </template>
@@ -52,7 +62,7 @@ import PanelGroup from './components/PanelGroup'
 import SaleChart from './components/SaleChart'
 import GoodChart from './components/GoodChart'
 import BoxCard from './components/BoxCard'
-
+import {  fetchGoodType } from "@/api/stock";
 import { getSale, getGood} from '@/api/statistics'
 
 export default {
@@ -65,6 +75,33 @@ export default {
   },
   data() {
     return {
+      pickerOptions2: {
+          shortcuts: [{
+            text: '最近一周',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '最近一个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '最近三个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+              picker.$emit('pick', [start, end]);
+            }
+          }]
+        },
       saleChartData: { 
         time:[],
         revenue:[], 
@@ -74,12 +111,13 @@ export default {
           goodNum:[],
           goodName:[]
       },
-      sql:'',
-      saleTimeSpan : 7,
+      saleToday:0,
+      saleTimeSpan : [],
       saleTimeType : 'week',
       goodTimeSpan : 7,
       goodTimeType : 'week',
-      
+      type:'全部',
+      Types:[],
       timeSpanOption : [
         {
           value: 'day',
@@ -110,9 +148,11 @@ export default {
     }
   },
   methods: {
-    handleSetLineChartData(type) {
-    
-      this.lineChartData = lineChartData[type]
+    fetchGoodType() {
+        fetchGoodType().then(data => {
+            this.Types = data.info
+            this.Types.unshift({ good_divide: '全部' })
+        })
     },
     handleSaleTimeSpan(saleTimeSpan){
       this.saleTimeType = saleTimeSpan[0];
@@ -126,16 +166,20 @@ export default {
     },
     getSale(){
       getSale({type:this.saleTimeType,span:this.saleTimeSpan}).then(data=>{
-        this.saleChartData = data.info;
-        console.log(1);
+        this.saleChartData.time = data.info.time;
+        this.saleChartData.revenue = data.info.revenue;
+        this.saleChartData.profit = data.info.profit;
+        this.saleToday = data.info.all;
+        this.orderToday = data.info.orders;
+
       })
     },
     getGood(){
-      getGood({type:this.goodTimeType}).then(data=>{
+      let type = this.type === '全部' ? '' : this.type;
+      getGood({type:this.goodTimeType,target : type}).then(data=>{
         this.goodChartData.goodName = data.goodName;
         this.goodChartData.goodNum = data.goodNum;
 
-        console.log(this.goodChartData);
       })
     },
   },
@@ -143,6 +187,7 @@ export default {
   created(){
     this.getSale();
     this.getGood();
+    this.fetchGoodType();
   }
  
 }

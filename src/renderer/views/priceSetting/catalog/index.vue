@@ -1,12 +1,14 @@
 <template>
 <div class="shop-container">
         <p class='shop-title'>商品优惠列表</p>
-        <el-button icon='el-icon-refresh' @click="getList" style="margin:5px" type='success '></el-button>
+        <el-button icon='el-icon-refresh'  title='刷新' @click="getList" style="margin:5px" type='success '></el-button>
 
         <el-table border :data="orderList" v-loading="listLoading"  class='goodsList'>
             <el-table-column align='center' type="index" label="序号" width="70">
             </el-table-column>
             <el-table-column align='center' prop="activity_id" label="编号" filter-placement="bottom-end" >
+            </el-table-column>
+            <el-table-column align='center' prop="name" label="名称" filter-placement="bottom-end" >
             </el-table-column>
             <el-table-column align='center' prop="discount" label="优惠价" filter-placement="bottom-end" >
             </el-table-column>

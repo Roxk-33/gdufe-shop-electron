@@ -1,7 +1,7 @@
 <template>
 <div class="shop-container">
         <p class='shop-title'>损耗商品列表</p>
-        <el-button icon='el-icon-refresh' @click="getList" style="margin:5px" type='success'></el-button>
+        <el-button icon='el-icon-refresh'  title='刷新' @click="getList" style="margin:5px" type='success'></el-button>
 
         <el-table border :data="goodList" v-loading="listLoading"  class='goodsList'>
             <el-table-column align='center' type="index" label="序号" width="70">

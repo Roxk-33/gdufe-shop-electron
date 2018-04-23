@@ -2,9 +2,9 @@
   <div class="shop-container">
 
     <p class='shop-title'>订单列表</p>
-        <el-button icon='el-icon-refresh' @click="getList" style="margin:5px" type='success'></el-button>
+        <el-button icon='el-icon-refresh'  title='刷新' @click="getList" style="margin:5px" type='success'></el-button>
         
-        <el-table border   :data="orderList"  highlight-current-row style="width: 90%; margin:20px auto;">
+        <el-table border v-loading='isLoading'  :data="orderList"  highlight-current-row style="width: 90%; margin:20px auto;">
             <el-table-column align="center" label="序号"   type="index" width='100'></el-table-column>
             <el-table-column align='center' prop="order_id" label="订单编号" width='100'>
             </el-table-column>
@@ -60,6 +60,7 @@
       data() {
 
         return {
+          isLoading:false,
           orderList:[],
           orderDetail:null,
           loading: false,
@@ -74,10 +75,15 @@
       methods: {
 
         getList(){
-          this.orderList = [];
+            this.isLoading = true;
+            this.orderList = [];
             getOrderList({page:this.currentPage,size:this.size}).then(data => {
                 this.orderList = data.info;
+                this.isLoading = false;
                 this.total_page = data.total;
+            }).catch((err) => {
+                this.orderList = [];          
+                this.isLoading = false;
             })
         },
         getOrderDetail(id){
@@ -105,7 +111,7 @@
       },
       filters:{
           TimeConvert(time){
-            const date = new Date(parseInt(time)*100 );
+            const date = new Date(parseInt(time)*100);
             return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`
           }
       }

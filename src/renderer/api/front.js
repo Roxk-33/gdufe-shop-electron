@@ -23,9 +23,9 @@ export function checkVip(params) {
   })
 }
 
-export function pushCart(data) {
+export function updateCart(data) {
   return request({
-    url: '/front/cart/in',
+    url: '/front/cart/update',
     method: 'post',
     data
   })

@@ -89,7 +89,8 @@ export const asyncRouterMap = [
         },
         children: [
             { path: 'catalog', component: _import('stock/catalog/index'), name: 'catalog', meta: { title: 'catalogStock', noCache: true, icon: 'list' } },
-            { path: 'lack', component: _import('stock/lack/index'), name: 'catalog', meta: { title: 'lockStock', noCache: true, icon: 'list' } },
+            { path: 'lack', component: _import('stock/lack/index'), name: 'lack', meta: { title: 'lockStock', noCache: true, icon: 'list' } },
+            { path: 'record', component: _import('stock/record/index'), name: 'record', meta: { title: 'recordStock', noCache: true, icon: 'list' } },
         ],
     },
 
@@ -164,7 +165,7 @@ export const asyncRouterMap = [
         },
         children: [{
             path: 'list',
-            component: _import('purchase/index'),
+            component: _import('purchase_stock/index'),
             name: 'purchaseList',
             meta: {
                 title: 'purchaseList',
@@ -172,6 +173,8 @@ export const asyncRouterMap = [
             }
         }],
     },
+
+    
 
     {
         path: '/priceSetting',

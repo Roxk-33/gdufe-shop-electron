@@ -12,7 +12,7 @@
             <el-input v-model="postForm.goodAttr" placeholder="规格" required></el-input>
         </el-form-item>
         <el-form-item label="销售价格" prop="goodPrice">
-            <el-input v-model="postForm.goodPrice" placeholder="销售价格" required></el-input>
+            <el-input v-model.number="postForm.goodPrice" placeholder="销售价格" required></el-input>
         </el-form-item>
         <el-form-item label="描述" prop="goodDescribe">
             <el-input v-model="postForm.goodDescribe" placeholder="描述"></el-input>

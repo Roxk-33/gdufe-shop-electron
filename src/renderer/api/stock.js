@@ -57,3 +57,19 @@ export function deleteLoss(params) {
     params
   })
 }
+
+
+export function fectchInStockList(params) {
+  return request({
+    url: '/good/inStock/list',
+    method: 'get',
+    params
+  })
+}
+export function fectchInStockDetail(params) {
+  return request({
+    url: '/good/inStock/detail',
+    method: 'get',
+    params
+  })
+}

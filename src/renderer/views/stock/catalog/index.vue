@@ -12,7 +12,7 @@
               :value="item.good_divide">
             </el-option>
           </el-select>
-        <el-button icon='el-icon-refresh' @click="getList" style="margin:5px" type='success '></el-button>
+        <el-button icon='el-icon-refresh'  title='刷新' @click="getList" style="margin:5px" type='success '></el-button>
         </div>
         
         <el-table border   :data="goodList"  highlight-current-row style="width: 90%; margin:20px auto;">
@@ -63,9 +63,7 @@
         }
       },
       methods: {
-        editGood(target){
-
-        },
+        
         getList(){
           this.goodList = [];
           fetchStockList({page:this.currentPage,size:this.size,type:this.type}).then(data => {

@@ -12,7 +12,10 @@
               :value="item.good_divide">
             </el-option>
           </el-select>
-        <el-button icon='el-icon-refresh' @click="getList" style="margin:5px" type='success '></el-button>
+          搜索：<el-input v-model="searchTarget" type='text'  style="margin:5px;width:200px;"></el-input>
+          <el-button icon='el-icon-search' @click="getList();" style="margin:5px" type='success'></el-button>
+          
+        <el-button icon='el-icon-refresh'  title='刷新'  @click="refresh" style="margin:5px" type='success '></el-button>
         </div>
         
         <el-table border   :data="goodList"  highlight-current-row style="width: 90%; margin:20px auto;">
@@ -131,6 +134,7 @@
           goodList:[],
           goodInfo:{},
           loading: false,
+          searchTarget:'',
           dialogVisiblePrice:false,
           dialogVisibleSale:false,
           goodInfoVisible:false,
@@ -150,11 +154,16 @@
       methods: {
         getList(){
           this.goodList = [];
-          fetchGoodList({page:this.currentPage,size:this.size,type:this.type}).then(data => {
+          fetchGoodList({page:this.currentPage,size:this.size,type:this.type, target:this.searchTarget}).then(data => {
               this.goodList = data.goods;
               this.total_page = data.total;
            
           })
+        },
+        refresh(){
+          this.searchTarget = '';
+          this.getList();
+          this.fetchGoodType();
         },
         getPriceCurve(id){
           getPriceCurve({goodId:id}).then(data=>{
@@ -192,14 +201,18 @@
               })
             this.getList();
           })
+        },
+        fetchGoodType(){
+          fetchGoodType().then( data =>{
+           this.Types = data.info
+           this.Types.unshift({good_divide:'全部'})
+         })
         }
       },
       created(){
          this.getList();
-         fetchGoodType().then( data =>{
-           this.Types = data.info
-           this.Types.unshift({good_divide:'全部'})
-         })
+         this.fetchGoodType();
+         
       }
     }
 </script>
