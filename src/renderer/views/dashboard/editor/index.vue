@@ -2,10 +2,10 @@
   <div class="dashboard-editor-container">
     <div class=" clearfix">
       
-      <div class="info-container">
+      <el-card class="info-container">
         <span class="display_name">你好,{{name}}</span>
         <span style="font-size:20px;padding-top:20px;display:inline-block;"></span>
-      </div>
+      </el-card>
     </div>
    
   </div>
@@ -32,11 +32,7 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
-	.emptyGif {
-		display: block;
-		width: 45%;
-		margin: 0 auto;
-	}
+
 
 	.dashboard-editor-container {
 		// background-color: #e3e3e3;
@@ -51,13 +47,13 @@ export default {
 		}
 		.info-container {
 			position: relative;
-			margin-left: 190px;
+			width:400px;
 			height: 150px;
 			line-height: 200px;
 			.display_name {
-				font-size: 38px;
+				font-size: 28px;
 				line-height: 48px;
-				// color: #212121;
+				color: #212121;
 				position: absolute;
 				top: 25px;
 			}

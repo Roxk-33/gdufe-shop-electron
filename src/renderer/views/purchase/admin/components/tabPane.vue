@@ -14,7 +14,7 @@
 
     <el-table-column  align="center" label="重要性">
       <template slot-scope="scope">
-        <el-rate v-model="scope.row.importance" disabled :colors="['#99A9BF', '#E6A23C', '#F56C6C']"   ></el-rate>
+        <el-rate v-model="scope.row.importance" disabled :colors="['#67C23A', '#E6A23C', '#F56C6C']"   ></el-rate>
        </template>
     </el-table-column>
 
@@ -95,7 +95,7 @@ export default {
     },
     purchaseFilter(status){
       status = parseInt(status);
-      const statusMap = ['未采购','已采购','缺货'];
+      const statusMap = ['未采购','已采购','商品缺货'];
       return statusMap[status]
     },
     TimeConversion(time){

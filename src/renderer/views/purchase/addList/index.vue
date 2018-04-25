@@ -125,7 +125,18 @@ export default {
     handleSelect(item) {
         this.postForm.goodId = parseInt(item.good_id);
     },
-
+    toHeavy(){
+      this.goodList.forEach((good, index1) => {
+            let goodId = good.goodId;
+            this.goodList = this.goodList.filter((other, index2) => {
+                if (other.goodId === goodId && index1 !== index2) {
+                    this.goodList[index1].purchaseNum+= this.goodList[index2].purchaseNum;
+                    return false;
+                }
+                return true;
+            })
+        })
+    },
     pushGood() {
       this.$refs["postForm"].validate(valid => {
         if (valid) {
@@ -135,6 +146,7 @@ export default {
               this.postForm.goodId = data.info.good_id;
               this.goodList.push(this.postForm);
               this.postForm = Object.assign({}, defaultForm);
+              this.toHeavy();
               this.$message({
                 message: "添加成功",
                 type: "success"

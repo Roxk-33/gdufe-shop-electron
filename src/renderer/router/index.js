@@ -54,7 +54,7 @@ export const asyncRouterMap = [
         redirect: 'noredirect',
         name: 'orderList',
         meta:{
-            roles: ['manager']
+            roles: ['manager', 'accountant']
         },
         children: [
             { path: 'index', component: _import('orderList/index'), name: 'orderList', meta: { title: 'orderList', noCache: true, icon: 'list'} },
@@ -65,7 +65,7 @@ export const asyncRouterMap = [
         component: Layout,
         redirect: 'noredirect',
         meta: {
-            roles: ['manager', 'accountant']
+            roles: ['manager']
         },
         children: [{
             path: '',
@@ -102,7 +102,7 @@ export const asyncRouterMap = [
         meta: {
             title: 'accountAdmin',
             icon: 'management',
-            roles: ['manager']
+            roles: ['manager','accountant']
         },
         children: [
             { path: 'addAccount', component: _import('account/addAccount/index'), name: 'addAccount', meta: { title: 'addAccount', noCache: true, icon: 'addAccount' } },
@@ -117,11 +117,11 @@ export const asyncRouterMap = [
         meta:{
             icon:'goodAdmin',
             title:'goodAdmin',
-            roles: ['manager']
+            roles: ['manager','stocker','accountant']
         },
         children: [
-            { path: 'list', component: _import('goodList/index'), name: 'goodList', meta: { title: 'goodList', noCache: true, icon: 'list'} },            
-            { path: 'index', component: _import('addGood/index'), name: 'addGood',meta: { title: 'addGood', icon: 'adjunction'}},
+            { path: 'list', component: _import('goodList/index'), name: 'goodList', meta: { title: 'goodList', noCache: true, icon: 'list',roles: ['manager','stocker','accountant']} },            
+            { path: 'index', component: _import('addGood/index'), name: 'addGood',meta: { title: 'addGood', icon: 'adjunction',roles: ['accountant']}},
         ],
     },
     {
@@ -211,6 +211,7 @@ export const asyncRouterMap = [
         meta: {
             title: 'lossAdmin',
             icon: 'lossAdmin',
+            
         },
         children: [{
                 path: 'list',
